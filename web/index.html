@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="$FLUTTER_BASE_HREF">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A new Flutter project.">
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="shreebalajitunch">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <title>shreebalajitunch</title>
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Firebase SDK - only core and analytics -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js"></script>
+
+    <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhyFVTcUaLvT8nGWs2DhqeoKW0-Ts28r0",
+      authDomain: "shreebalajitunch.firebaseapp.com",
+      projectId: "shreebalajitunch",
+      storageBucket: "shreebalajitunch.appspot.com",
+      messagingSenderId: "245150252300",
+      appId: "1:245150252300:web:b041e3130517acbe8ddd29",
+      measurementId: "G-1Y8X6E3THD"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    </script>
+
+    <script>
+    var serviceWorkerVersion = null;
+
+    </script>
+    <script src="flutter.js" defer></script>
+</head>
+<body>
+<script>
+    window.addEventListener('load', function(ev) {
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1069211223885",
+    "project_id": "shree-balaji-4666c",
+    "storage_bucket": "shree-balaji-4666c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069211223885:android:15f377df7d02367cdcd904",
+        "android_client_info": {
+          "package_name": "com.visiondgtech.shreebalajitunch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmB_Y3-eJSU_bRouc31akiptJ924TYHoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

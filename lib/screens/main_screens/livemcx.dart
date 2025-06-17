@@ -1,0 +1,85 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'mcxdata.dart';
+
+class ShopNow extends StatefulWidget {
+  const ShopNow({Key key}) : super(key: key);
+
+  @override
+  _ShopNowState createState() => _ShopNowState();
+}
+
+class _ShopNowState extends State<ShopNow> with AutomaticKeepAliveClientMixin {
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
+  String mcxUrl = "";
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      body: Stack(
+        children: [
+          WebView(
+            initialUrl: "https://shreebalajistore.com/",
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+            onPageStarted: (String url) {
+              setState(() {
+                isLoading = true;
+              });
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                isLoading = false;
+              });
+            },
+            onWebResourceError: (error) {
+              setState(() {
+                isLoading = false;
+              });
+              signupMessages("Please check your Internet connection");
+            },
+          ),
+          if (isLoading)
+            Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF800000)),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void signupMessages(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 12.0,
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
