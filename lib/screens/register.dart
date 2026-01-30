@@ -23,130 +23,177 @@ class _MyRegisterState extends State<MyRegister> {
   TextEditingController mobileController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
-  // Royal color scheme
+  // Modern color scheme matching the design
   final primaryColor = Color(0xFF2C3E50); // Deep blue-gray
-  final accentColor = Color(0xFFD4AF37); // Royal gold
-  final backgroundColor = Color(0xFF1A2530); // Darker blue-gray for background
+  final accentColor = Color(0xFFE8B44F); // Golden yellow
+  final backgroundColor = Color(0xFF1E2A35); // Dark blue-gray
+  final cardColor = Color(0xFF2A3A47); // Card background
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isSmallScreen = size.width < 360;
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [backgroundColor, primaryColor],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              backgroundColor,
+              Color(0xFF1A2530),
+            ],
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 30),
-                  // Back button
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios, color: accentColor),
-                    onPressed: () => Navigator.pop(context),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
                   ),
-                  SizedBox(height: 20),
-                  // Header with gold accent
-                  Row(
-                    children: [
-                      Container(
-                        width: 5,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: accentColor,
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Text(
-                        'Create Account',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(
-                      'Please fill in the details below',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 16,
-                      ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isSmallScreen ? 20.0 : 24.0,
                     ),
-                  ),
-                  SizedBox(height: 40),
-                  // Form fields
-                  _buildTextField(
-                    controller: nameController,
-                    hintText: "Full Name",
-                    icon: Icons.person_outline,
-                  ),
-                  SizedBox(height: 20),
-                  _buildTextField(
-                    controller: mobileController,
-                    hintText: "Mobile Number",
-                    icon: Icons.phone_android,
-                    keyboardType: TextInputType.number,
-                  ),
-                  SizedBox(height: 20),
-                  _buildTextField(
-                    controller: firmController,
-                    hintText: "Firm Name",
-                    icon: Icons.business,
-                  ),
-                  SizedBox(height: 20),
-                  _buildTextField(
-                    controller: addressController,
-                    hintText: "Address",
-                    icon: Icons.location_on_outlined,
-                  ),
-                  SizedBox(height: 40),
-                  // Register button
-                  _buildRegisterButton(),
-                  SizedBox(height: 30),
-                  // Sign in option
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'login');
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Already have an account? ',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 16,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: isSmallScreen ? 20 : 30),
+                        // Back button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: cardColor.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(12),
                           ),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios_new,
+                              color: accentColor,
+                              size: 20,
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 25 : 35),
+                        // Header with gold accent bar
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            TextSpan(
-                              text: 'Sign In',
-                              style: TextStyle(
+                            Container(
+                              width: 4,
+                              height: isSmallScreen ? 35 : 45,
+                              decoration: BoxDecoration(
                                 color: accentColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Flexible(
+                              child: Text(
+                                'Create Account',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: isSmallScreen ? 28 : 32,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                        SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Text(
+                            'Please fill in the details below',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.6),
+                              fontSize: isSmallScreen ? 14 : 16,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 35 : 45),
+                        // Form fields
+                        _buildTextField(
+                          controller: nameController,
+                          hintText: "Full Name",
+                          icon: Icons.person_outline_rounded,
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        SizedBox(height: isSmallScreen ? 16 : 20),
+                        _buildTextField(
+                          controller: mobileController,
+                          hintText: "Mobile Number",
+                          icon: Icons.phone_android_rounded,
+                          keyboardType: TextInputType.number,
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        SizedBox(height: isSmallScreen ? 16 : 20),
+                        _buildTextField(
+                          controller: firmController,
+                          hintText: "Firm Name",
+                          icon: Icons.business_rounded,
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        SizedBox(height: isSmallScreen ? 16 : 20),
+                        _buildTextField(
+                          controller: addressController,
+                          hintText: "Address",
+                          icon: Icons.location_on_outlined,
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        SizedBox(height: isSmallScreen ? 35 : 45),
+                        // Register button
+                        _buildRegisterButton(isSmallScreen),
+                        SizedBox(height: isSmallScreen ? 25 : 35),
+                        // Sign in option
+                        Center(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, 'login');
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                            ),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Already have an account? ',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  fontSize: isSmallScreen ? 14 : 16,
+                                  letterSpacing: 0.3,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'Sign In',
+                                    style: TextStyle(
+                                      color: accentColor,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: accentColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -158,39 +205,68 @@ class _MyRegisterState extends State<MyRegister> {
     required String hintText,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
+    bool isSmallScreen = false,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: accentColor.withOpacity(0.3), width: 1),
+        color: cardColor.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: cardColor.withValues(alpha: 0.6),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: isSmallScreen ? 14 : 16,
+          letterSpacing: 0.3,
+        ),
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: accentColor),
+          prefixIcon: Padding(
+            padding: EdgeInsets.only(left: 12, right: 8),
+            child: Icon(
+              icon,
+              color: accentColor,
+              size: isSmallScreen ? 20 : 22,
+            ),
+          ),
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+          hintStyle: TextStyle(
+            color: Colors.white.withValues(alpha: 0.4),
+            fontSize: isSmallScreen ? 14 : 16,
+            letterSpacing: 0.3,
+          ),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: isSmallScreen ? 16 : 20,
+            horizontal: 16,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildRegisterButton() {
+  Widget _buildRegisterButton(bool isSmallScreen) {
     return Container(
       width: double.infinity,
-      height: 55,
+      height: isSmallScreen ? 50 : 56,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: accentColor.withOpacity(0.3),
-            blurRadius: 10,
-            offset: Offset(0, 5),
+            color: accentColor.withValues(alpha: 0.4),
+            blurRadius: 15,
+            offset: Offset(0, 6),
           ),
         ],
       ),
@@ -198,17 +274,20 @@ class _MyRegisterState extends State<MyRegister> {
         onPressed: _sendOtp,
         style: ElevatedButton.styleFrom(
           backgroundColor: accentColor,
+          foregroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
           elevation: 0,
+          padding: EdgeInsets.symmetric(vertical: 16),
         ),
         child: Text(
           'Register',
           style: TextStyle(
-            color: primaryColor,
-            fontSize: 18,
+            color: backgroundColor,
+            fontSize: isSmallScreen ? 16 : 18,
             fontWeight: FontWeight.bold,
+            letterSpacing: 1,
           ),
         ),
       ),

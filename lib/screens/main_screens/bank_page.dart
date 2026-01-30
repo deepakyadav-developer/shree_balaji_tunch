@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../constant/app_info.dart';
+import 'package:shreebalaji_tounch/constant/app_info.dart';
+import '../../constant/app_info.dart' as app_info;
 import '../../widgets/my_seprators.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,8 +27,8 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: bgColor,
-      textColor: whiteColor,
+      backgroundColor: app_info.bgColor,
+      textColor: app_info.whiteColor,
     );
   }
 
@@ -38,11 +38,11 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: bgColor,
+        backgroundColor: app_info.bgColor,
         title: Text(
           "Bank Details",
           style: TextStyle(
-            color: whiteColor,
+            color: app_info.whiteColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -65,8 +65,8 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
 
                   // Prepare the text to be shared
                   String message =
-                      "Download $projectName Mobile app and see the latest update\n"
-                      "$androidLink$packageName";
+                      "Download ${app_info.projectName} Mobile app and see the latest update\n"
+                      "${app_info.androidLink}${app_info.packageName}";
 
                   await Share.shareXFiles(
                     [XFile(file.path)],
@@ -81,20 +81,20 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: whiteColor.withOpacity(0.2),
+                  color: app_info.whiteColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.share,
-                      color: whiteColor,
+                      color: app_info.whiteColor,
                       size: 18,
                     ),
                     SizedBox(width: 4),
                     Text(
                       "Share",
-                      style: TextStyle(color: whiteColor),
+                      style: TextStyle(color: app_info.whiteColor),
                     )
                   ],
                 ),
@@ -114,9 +114,9 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      bgColor.withOpacity(0.9),
-                      bgColor.withOpacity(0.6),
-                      bgColor.withOpacity(0.3),
+                      app_info.bgColor.withValues(alpha: 0.9),
+                      app_info.bgColor.withValues(alpha: 0.6),
+                      app_info.bgColor.withValues(alpha: 0.3),
                       Colors.white,
                     ],
                   ),
@@ -128,9 +128,10 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                 child: Opacity(
                   opacity: 0.05,
                   child: Image.asset(
-                    'assets/images/pattern.png',
-                    fit: BoxFit.cover,
+                    'assets/images/logo.png',
+                    fit: BoxFit.none,
                     repeat: ImageRepeat.repeat,
+                    errorBuilder: (context, error, stackTrace) => SizedBox(),
                   ),
                 ),
               ),
@@ -149,7 +150,7 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               spreadRadius: 1,
                               blurRadius: 10,
                               offset: Offset(0, 5),
@@ -161,12 +162,12 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                             Container(
                               padding: EdgeInsets.all(15),
                               decoration: BoxDecoration(
-                                color: bgColor.withOpacity(0.1),
+                                color: app_info.bgColor.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.account_balance_outlined,
-                                color: bgColor,
+                                color: app_info.bgColor,
                                 size: 40,
                               ),
                             ),
@@ -190,14 +191,19 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                         builder: (context, snapshot) {
                           if (!snapshot.hasData || snapshot.data == null) {
                             return Container(
-                              height: 200,
+                              height: 300,
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    Image.asset(
+                                      "assets/images/logo.png",
+                                      height: 120,
+                                    ),
+                                    SizedBox(height: 20),
                                     CupertinoActivityIndicator(
                                       radius: 18,
-                                      color: bgColor,
+                                      color: app_info.bgColor,
                                     ),
                                     SizedBox(height: 15),
                                     Text(
@@ -214,17 +220,16 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                           } else {
                             if (snapshot.data!.docs.isEmpty) {
                               return Container(
-                                height: 200,
+                                height: 300,
                                 child: Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
-                                        Icons.info_outline,
-                                        size: 50,
-                                        color: Colors.grey[400],
+                                      Image.asset(
+                                        "assets/images/logo.png",
+                                        height: 150,
                                       ),
-                                      SizedBox(height: 15),
+                                      SizedBox(height: 20),
                                       Text(
                                         "No Bank Details Available",
                                         style: TextStyle(
@@ -260,7 +265,8 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.black
-                                                        .withOpacity(0.08),
+                                                        .withValues(
+                                                            alpha: 0.08),
                                                     spreadRadius: 1,
                                                     blurRadius: 15,
                                                     offset: Offset(0, 8),
@@ -290,8 +296,8 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                                                       horizontal: 12,
                                                       vertical: 8),
                                                   decoration: BoxDecoration(
-                                                    color: bgColor
-                                                        .withOpacity(0.1),
+                                                    color: app_info.bgColor
+                                                        .withValues(alpha: 0.1),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             20),
@@ -302,7 +308,7 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                                                       fontWeight:
                                                           FontWeight.w600,
                                                       fontSize: 16,
-                                                      color: bgColor,
+                                                      color: app_info.bgColor,
                                                     ),
                                                   ),
                                                 ),
@@ -415,7 +421,7 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 5,
                       offset: Offset(0, 3),
@@ -431,7 +437,15 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                       child: CupertinoActivityIndicator(),
                     ),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (context, url, error) => Container(
+                    height: 60,
+                    child: Center(
+                      child: Image.asset(
+                        "assets/images/logo.png",
+                        height: 40,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Divider(thickness: 1, color: Colors.grey[200], height: 30),
@@ -460,14 +474,14 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: bgColor.withOpacity(0.05),
+              color: app_info.bgColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(5),
             ),
             width: Get.width * 0.3,
             child: Text(
               label,
               style: TextStyle(
-                color: bgColor,
+                color: app_info.bgColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -498,14 +512,14 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: bgColor.withOpacity(0.05),
+              color: app_info.bgColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(5),
             ),
             width: Get.width * 0.3,
             child: Text(
               label,
               style: TextStyle(
-                color: bgColor,
+                color: app_info.bgColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -530,13 +544,13 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
             child: Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: bgColor.withOpacity(0.1),
+                color: app_info.bgColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.copy,
                 size: 16,
-                color: bgColor,
+                color: app_info.bgColor,
               ),
             ),
           ),

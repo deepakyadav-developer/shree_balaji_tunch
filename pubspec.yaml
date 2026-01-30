@@ -1,20 +1,7 @@
 name: shreebalaji_tounch
 description: Shree Balaji Tounch Application.
 
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
@@ -56,22 +43,19 @@ dependencies:
   upgrader: ^11.3.0
   animate_do: ^3.3.4
   device_info_plus: ^11.2.0
-  
-  
-
-
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/logo.png"
-  remove_alpha_ios: true
-  adaptive_icon_background: "assets/images/logo.png"
-  adaptive_icon_foreground: "assets/images/logo.png"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.14.2
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/playstore-icon.png"
+  remove_alpha_ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/playstore-icon.png"
+  min_sdk_android: 21
 
 
 flutter:

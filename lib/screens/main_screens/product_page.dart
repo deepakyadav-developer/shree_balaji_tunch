@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:shreebalaji_tounch/constant/app_info.dart';
+import 'package:shreebalaji_tounch/constant/app_info.dart' as app_info;
 import 'package:shreebalaji_tounch/screens/main_screens/product_images.dart';
 
 class ProductPage extends StatefulWidget {
@@ -28,7 +27,7 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: bgColor,
+      statusBarColor: app_info.bgColor,
     ));
 
     return Scaffold(
@@ -41,8 +40,19 @@ class _ProductPageState extends State<ProductPage> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(goldColor),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      height: 120,
+                    ),
+                    SizedBox(height: 20),
+                    CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(app_info.goldColor),
+                    ),
+                  ],
                 ),
               );
             }
@@ -53,7 +63,7 @@ class _ProductPageState extends State<ProductPage> {
                 // App Bar
                 SliverAppBar(
                   expandedHeight: Get.height / 2.5,
-                  backgroundColor: bgColor,
+                  backgroundColor: app_info.bgColor,
                   floating: false,
                   pinned: true,
                   stretch: true,
@@ -62,7 +72,7 @@ class _ProductPageState extends State<ProductPage> {
                     title: Text(
                       widget.categoryName,
                       style: TextStyle(
-                        color: goldColor,
+                        color: app_info.goldColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -88,11 +98,20 @@ class _ProductPageState extends State<ProductPage> {
                             imageUrl: widget.categorypic,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
-                              color: bgColor.withOpacity(0.1),
+                              color: app_info.bgColor.withValues(alpha: 0.1),
                               child: Center(
-                                child: CircularProgressIndicator(
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(goldColor),
+                                child: Image.asset(
+                                  "assets/images/logo.png",
+                                  height: 80,
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: app_info.bgColor.withValues(alpha: 0.05),
+                              child: Center(
+                                child: Image.asset(
+                                  "assets/images/logo.png",
+                                  height: 80,
                                 ),
                               ),
                             ),
@@ -105,7 +124,7 @@ class _ProductPageState extends State<ProductPage> {
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   Colors.transparent,
-                                  Colors.black.withOpacity(0.5),
+                                  Colors.black.withValues(alpha: 0.5),
                                 ],
                               ),
                             ),
@@ -118,12 +137,12 @@ class _ProductPageState extends State<ProductPage> {
                     icon: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: bgColor.withOpacity(0.7),
+                        color: app_info.bgColor.withValues(alpha: 0.7),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.arrow_back,
-                        color: goldColor,
+                        color: app_info.goldColor,
                       ),
                     ),
                     onPressed: () => Get.back(),
@@ -137,17 +156,16 @@ class _ProductPageState extends State<ProductPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.image_not_supported_outlined,
-                            size: 80,
-                            color: bgColor.withOpacity(0.5),
+                          Image.asset(
+                            "assets/images/logo.png",
+                            height: 150,
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 20),
                           Text(
                             'No Images Available',
                             style: TextStyle(
                               fontSize: 20,
-                              color: bgColor,
+                              color: app_info.bgColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -183,7 +201,7 @@ class _ProductPageState extends State<ProductPage> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     blurRadius: 8,
                                     offset: Offset(0, 3),
                                   ),
@@ -197,12 +215,24 @@ class _ProductPageState extends State<ProductPage> {
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) {
                                     return Container(
-                                      color: bgColor.withOpacity(0.1),
+                                      color: app_info.bgColor
+                                          .withValues(alpha: 0.1),
                                       child: Center(
-                                        child: CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  goldColor),
+                                        child: Image.asset(
+                                          "assets/images/logo.png",
+                                          height: 60,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  errorWidget: (context, url, error) {
+                                    return Container(
+                                      color: app_info.bgColor
+                                          .withValues(alpha: 0.05),
+                                      child: Center(
+                                        child: Image.asset(
+                                          "assets/images/logo.png",
+                                          height: 60,
                                         ),
                                       ),
                                     );

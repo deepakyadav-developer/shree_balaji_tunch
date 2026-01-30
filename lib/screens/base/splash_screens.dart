@@ -6,11 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:get/Get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
+import '../../constant/app_info.dart' as app_info;
 import '../register.dart';
 import 'my_bottomBar.dart';
-import '../../constant/app_info.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -18,12 +17,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   var _visible = true;
 
   late AnimationController animationController;
+  late AnimationController pulseController;
+  late AnimationController rotationController;
   late Animation<double> animation;
   late Animation<double> fadeAnimation;
+  late Animation<double> pulseAnimation;
+  late Animation<double> rotationAnimation;
 
   startTimer() {
     Future.delayed(const Duration(seconds: 3), _getData);
@@ -32,17 +35,33 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     _checkDeveloperMode();
-    // playSound();
-
     super.initState();
 
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    // Main scale animation
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1500));
     animation =
-        CurvedAnimation(parent: animationController, curve: Curves.easeOutBack);
+        CurvedAnimation(parent: animationController, curve: Curves.elasticOut);
     fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: animationController, curve: Curves.easeIn),
     );
+
+    // Pulse animation for glow effect
+    pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    )..repeat(reverse: true);
+    pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+
+    // Rotation animation for decorative elements
+    rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    )..repeat();
+    rotationAnimation =
+        Tween<double>(begin: 0, end: 1).animate(rotationController);
 
     animation.addListener(() => setState(() {}));
     animationController.forward();
@@ -53,11 +72,8 @@ class SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkDeveloperMode() async {
-    // Only check developer mode in release builds on Android
     if (kReleaseMode && Platform.isAndroid) {
       try {
-        final deviceInfoPlugin = DeviceInfoPlugin();
-        final androidInfo = await deviceInfoPlugin.androidInfo;
         final isDeveloperModeEnabled = await _isDeveloperModeEnabled();
 
         if (isDeveloperModeEnabled) {
@@ -70,7 +86,6 @@ class SplashScreenState extends State<SplashScreen>
         startTimer();
       }
     } else {
-      // In debug mode or non-Android platforms (including iOS), just proceed
       startTimer();
     }
   }
@@ -126,11 +141,15 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     animationController.dispose();
+    pulseController.dispose();
+    rotationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return UpgradeAlert(
       upgrader: Upgrader(
         messages: MyHindiMessages(),
@@ -141,172 +160,320 @@ class SplashScreenState extends State<SplashScreen>
       shouldPopScope: () => true,
       child: Scaffold(
         body: Container(
+          width: size.width,
+          height: size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
               colors: [
-                const Color(0xFF800020), // Dark maroon
-                const Color(0xFF5D0015), // Deeper maroon
-                const Color(0xFF3A000E), // Very deep maroon
-                const Color(0xFF1A0008), // Almost black maroon
+                app_info.primaryDarkColor,
+                app_info.primaryColor,
+                app_info.primaryLightColor,
+                app_info.accentColor,
               ],
-              stops: [0.1, 0.4, 0.7, 0.9],
+              stops: [0.0, 0.3, 0.6, 1.0],
             ),
           ),
           child: Stack(
-            fit: StackFit.expand,
             children: <Widget>[
-              // Background decoration elements
-              Positioned(
-                top: -50,
-                right: -50,
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: -80,
-                left: -80,
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
-                  ),
-                ),
-              ),
-
-              // Main content
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  // Logo with shadow and glow effect
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.amber.withOpacity(0.2),
-                          blurRadius: 30,
-                          spreadRadius: 15,
+              // Animated background circles
+              ...List.generate(3, (index) {
+                return AnimatedBuilder(
+                  animation: rotationAnimation,
+                  builder: (context, child) {
+                    return Positioned(
+                      top: size.height * (0.1 + index * 0.3) -
+                          (100 * rotationAnimation.value),
+                      right: size.width * (0.2 + index * 0.2) -
+                          (80 * rotationAnimation.value),
+                      child: Container(
+                        width: 150 + (index * 50),
+                        height: 150 + (index * 50),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              app_info.whiteColor.withValues(alpha: 0.05),
+                              app_info.whiteColor.withValues(alpha: 0.0),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                    child: FadeTransition(
-                      opacity: fadeAnimation,
-                      child: ScaleTransition(
-                        scale: animation,
+                      ),
+                    );
+                  },
+                );
+              }),
+
+              // Floating particles effect
+              ...List.generate(15, (index) {
+                return AnimatedBuilder(
+                  animation: pulseAnimation,
+                  builder: (context, child) {
+                    return Positioned(
+                      left: (index * 50.0) % size.width,
+                      top: (index * 80.0) % size.height,
+                      child: Opacity(
+                        opacity: 0.3 * pulseAnimation.value,
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          width: 4 + (index % 3) * 2,
+                          height: 4 + (index % 3) * 2,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.amber.withOpacity(0.3),
-                              width: 2,
+                            color: app_info.amberColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    app_info.amberColor.withValues(alpha: 0.5),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
+
+              // Main content
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // Logo with advanced animations
+                    AnimatedBuilder(
+                      animation: pulseAnimation,
+                      builder: (context, child) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: app_info.amberColor.withValues(
+                                    alpha: 0.3 * pulseAnimation.value),
+                                blurRadius: 40 * pulseAnimation.value,
+                                spreadRadius: 20 * pulseAnimation.value,
+                              ),
+                              BoxShadow(
+                                color: app_info.orangeColor.withValues(
+                                    alpha: 0.2 * pulseAnimation.value),
+                                blurRadius: 60 * pulseAnimation.value,
+                                spreadRadius: 30 * pulseAnimation.value,
+                              ),
+                            ],
+                          ),
+                          child: FadeTransition(
+                            opacity: fadeAnimation,
+                            child: ScaleTransition(
+                              scale: animation,
+                              child: Container(
+                                padding: EdgeInsets.all(size.width * 0.04),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      app_info.whiteColor
+                                          .withValues(alpha: 0.2),
+                                      app_info.whiteColor
+                                          .withValues(alpha: 0.05),
+                                    ],
+                                  ),
+                                  border: Border.all(
+                                    color: app_info.amberColor
+                                        .withValues(alpha: 0.4),
+                                    width: 3,
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(size.width * 0.03),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: app_info.whiteColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: app_info.whiteColor
+                                            .withValues(alpha: 0.3),
+                                        blurRadius: 20,
+                                        spreadRadius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                    width: size.width * 0.45,
+                                    height: size.width * 0.45,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            width: 220,
-                            height: 220,
+                        );
+                      },
+                    ),
+
+                    SizedBox(height: size.height * 0.08),
+
+                    // Animated loading indicator
+                    FadeTransition(
+                      opacity: fadeAnimation,
+                      child: AnimatedBuilder(
+                        animation: pulseAnimation,
+                        builder: (context, child) {
+                          return Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  app_info.amberColor.withValues(alpha: 0.2),
+                                  app_info.orangeColor.withValues(alpha: 0.2),
+                                ],
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  app_info.amberColor,
+                                ),
+                                strokeWidth: 3,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    SizedBox(height: size.height * 0.03),
+
+                    // Loading text with gradient
+                    FadeTransition(
+                      opacity: fadeAnimation,
+                      child: ShaderMask(
+                        shaderCallback: (bounds) {
+                          return LinearGradient(
+                            colors: [
+                              app_info.whiteColor,
+                              app_info.amberColor,
+                              app_info.orangeColor,
+                              app_info.whiteColor,
+                            ],
+                            stops: [0.0, 0.3, 0.7, 1.0],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds);
+                        },
+                        child: Text(
+                          'Loading...',
+                          style: TextStyle(
+                            color: app_info.whiteColor,
+                            fontSize: size.width * 0.05,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 2,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 50),
-
-                  // Custom animated loader
-                  FadeTransition(
-                    opacity: fadeAnimation,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white.withOpacity(0.1),
-                      ),
-                      child: const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Loading text with shimmer effect
-                  FadeTransition(
-                    opacity: fadeAnimation,
-                    child: ShaderMask(
-                      shaderCallback: (bounds) {
-                        return LinearGradient(
-                          colors: [Colors.white, Colors.amber, Colors.white],
-                          stops: [0.0, 0.5, 1.0],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          tileMode: TileMode.mirror,
-                        ).createShader(bounds);
-                      },
-                      child: const Text(
-                        'Loading...',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
-              // Welcome text at bottom
+              // Bottom branding section
               Positioned(
-                bottom: 50,
+                bottom: size.height * 0.08,
                 left: 0,
                 right: 0,
                 child: FadeTransition(
                   opacity: fadeAnimation,
                   child: Column(
                     children: [
-                      const Text(
+                      Text(
                         'Welcome to',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
+                          color: app_info.whiteColor.withValues(alpha: 0.8),
+                          fontSize: size.width * 0.04,
                           fontWeight: FontWeight.w400,
+                          letterSpacing: 1,
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'Shree Balaji Tunch',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
+                      SizedBox(height: size.height * 0.01),
+                      ShaderMask(
+                        shaderCallback: (bounds) {
+                          return LinearGradient(
+                            colors: [
+                              app_info.amberColor,
+                              app_info.orangeColor,
+                              app_info.amberColor,
+                            ],
+                          ).createShader(bounds);
+                        },
+                        child: Text(
+                          'Shree Balaji Tunch',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: app_info.whiteColor,
+                            fontSize: size.width * 0.065,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Container(
-                        width: 50,
-                        height: 3,
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
+                      SizedBox(height: size.height * 0.015),
+                      AnimatedBuilder(
+                        animation: pulseAnimation,
+                        builder: (context, child) {
+                          return Container(
+                            width: 60 * pulseAnimation.value,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  app_info.amberColor,
+                                  app_info.orangeColor,
+                                  Colors.transparent,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: app_info.amberColor
+                                      .withValues(alpha: 0.5),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
+                  ),
+                ),
+              ),
+
+              // Version text
+              Positioned(
+                bottom: size.height * 0.02,
+                left: 0,
+                right: 0,
+                child: FadeTransition(
+                  opacity: fadeAnimation,
+                  child: Text(
+                    'Version 1.0.0',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: app_info.whiteColor.withValues(alpha: 0.5),
+                      fontSize: size.width * 0.03,
+                      fontWeight: FontWeight.w300,
+                      letterSpacing: 1,
+                    ),
                   ),
                 ),
               ),
@@ -324,33 +491,6 @@ class SplashScreenState extends State<SplashScreen>
     } else {
       Get.offAll(() => MyBottomBar());
     }
-  }
-}
-
-// Simple Shimmer effect widget for text
-class ShimmerText extends StatelessWidget {
-  final String text;
-  final TextStyle style;
-
-  const ShimmerText({super.key, required this.text, required this.style});
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) {
-        return LinearGradient(
-          colors: [Colors.white, Colors.amber, Colors.white],
-          stops: [0.0, 0.5, 1.0],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          tileMode: TileMode.mirror,
-        ).createShader(bounds);
-      },
-      child: Text(
-        text,
-        style: style.copyWith(color: Colors.white),
-      ),
-    );
   }
 }
 

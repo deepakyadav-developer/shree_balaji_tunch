@@ -1,19 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:html/parser.dart';
-import 'package:path/path.dart' as path;
 import 'dart:math';
 import 'package:animated_digit/animated_digit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -22,7 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 
 import '../../widgets/story_widget.dart';
-import '../../constant/app_info.dart';
+import '../../constant/app_info.dart' as app_info;
 
 // Define common colors
 const Color borderColor = Colors.grey;
@@ -300,7 +295,7 @@ class _RatePageState extends State<RatePage>
             children: [
               Container(
                 height: 110,
-                color: Color(0xff44000d),
+                color: app_info.bgColor,
                 child: Column(
                   children: [
                     StreamBuilder<QuerySnapshot>(
@@ -311,8 +306,17 @@ class _RatePageState extends State<RatePage>
                         if (snapshot.hasData) {
                           return Container(
                             height: 25,
-                            // padding: const EdgeInsets.symmetric(vertical: 10),
-                            color: Color(0xff44000d),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  app_info.primaryColor,
+                                  app_info.primaryLightColor,
+                                  app_info.accentColor,
+                                ],
+                              ),
+                            ),
                             child: Center(child: _myMarquee(snapshot.data!)),
                           );
                         } else {
@@ -332,16 +336,26 @@ class _RatePageState extends State<RatePage>
                       .collection('slider')
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(
-                        child: CupertinoActivityIndicator(),
+                    // Show loading indicator while waiting
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        height: 150,
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
                       );
-                    } else {
+                    }
+
+                    // Check if we have data and it's not empty
+                    if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                       return SizedBox(
                         height: 150,
                         child: _carousel(snapshot.data!),
                       );
                     }
+
+                    // Show fallback slider for errors or empty data
+                    return _buildFallbackSlider();
                   }),
               const SizedBox(
                 height: 5,
@@ -431,7 +445,7 @@ class _RatePageState extends State<RatePage>
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           child: Image.asset(
-                                            'assets/images/l.png',
+                                            'assets/images/logo.png',
                                             height: 50,
                                           ),
                                         )
@@ -470,7 +484,7 @@ class _RatePageState extends State<RatePage>
   }
 
   Widget _myMarquee(data) {
-    String messages1 = 'Welcome to $projectName';
+    String messages1 = 'Welcome to ${app_info.projectName}';
     for (var element in data.docs) {
       messages1 = messages1 + element.get('message') + '     ';
     }
@@ -501,19 +515,92 @@ class _RatePageState extends State<RatePage>
 
   Widget _carousel(data) {
     List<Widget> list = [];
-    for (var element in data.docs) {
-      list.add(SizedBox(
-        width: Get.width,
-        child: CachedNetworkImage(
-          placeholder: (context, url) {
-            return Container(
-                color: bgColor, child: Image.asset('assets/images/l.png'));
-          },
-          imageUrl: element.get('url'),
-          fit: BoxFit.fill,
-        ),
-      ));
+
+    try {
+      print('Processing ${data.docs.length} slider documents');
+
+      for (var element in data.docs) {
+        try {
+          String imageUrl = element.get('url') ?? '';
+
+          if (imageUrl.isEmpty) {
+            print('Empty URL found in slider document');
+            continue;
+          }
+
+          print('Loading slider image: $imageUrl');
+
+          list.add(Container(
+            width: Get.width,
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: CachedNetworkImage(
+                placeholder: (context, url) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          bgColor.withValues(alpha: 0.3),
+                          bgColor.withValues(alpha: 0.1),
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/logo.png',
+                            height: 60,
+                          ),
+                          SizedBox(height: 10),
+                          CupertinoActivityIndicator(),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  print('Error loading image $url: $error');
+                  return _buildErrorSlide();
+                },
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                cacheKey: imageUrl,
+                maxHeightDiskCache: 400,
+                maxWidthDiskCache: 800,
+              ),
+            ),
+          ));
+        } catch (e) {
+          print('Error processing slider document: $e');
+          continue;
+        }
+      }
+    } catch (e) {
+      print('Error in _carousel: $e');
     }
+
+    if (list.isEmpty) {
+      print('No valid slider images, showing fallback');
+      return _buildFallbackSlider();
+    }
+
+    print('Successfully loaded ${list.length} slider images');
+
     return Container(
       decoration: BoxDecoration(color: whiteColor),
       width: double.infinity,
@@ -523,13 +610,189 @@ class _RatePageState extends State<RatePage>
           items: list,
           options: CarouselOptions(
             height: 150,
-            viewportFraction: 1.0,
+            viewportFraction: 0.95,
             autoPlay: true,
-            enlargeCenterPage: false,
+            autoPlayInterval: Duration(seconds: 4),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            enlargeCenterPage: true,
+            enlargeFactor: 0.15,
             onPageChanged: (index, reason) {
               // Handle page change if needed
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  // Beautiful fallback slider when no network or data
+  Widget _buildFallbackSlider() {
+    final List<Map<String, dynamic>> fallbackSlides = [
+      {
+        'title': 'Welcome to\nShree Balaji',
+        'subtitle': 'Your Trusted Gold & Silver Partner',
+        'gradient': [Color(0xFFFFD700), Color(0xFFFFA500)],
+        'icon': Icons.diamond,
+      },
+      {
+        'title': 'Live Rates',
+        'subtitle': 'Real-time Gold & Silver Prices',
+        'gradient': [Color(0xFF1A237E), Color(0xFF3949AB)],
+        'icon': Icons.trending_up,
+      },
+      {
+        'title': 'Best Quality',
+        'subtitle': '100% Pure & Certified',
+        'gradient': [Color(0xFFC0C0C0), Color(0xFF808080)],
+        'icon': Icons.verified,
+      },
+    ];
+
+    return Container(
+      height: 150,
+      child: CarouselSlider(
+        items: fallbackSlides.map((slide) {
+          return Container(
+            width: Get.width,
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: slide['gradient'],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: slide['gradient'][0].withValues(alpha: 0.4),
+                  blurRadius: 15,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                // Decorative circles
+                Positioned(
+                  top: -30,
+                  right: -30,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -20,
+                  left: -20,
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
+                  ),
+                ),
+                // Content
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              slide['title'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                height: 1.2,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              slide['subtitle'],
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.9),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          slide['icon'],
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+        options: CarouselOptions(
+          height: 150,
+          viewportFraction: 0.95,
+          autoPlay: true,
+          autoPlayInterval: Duration(seconds: 4),
+          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enlargeCenterPage: true,
+          enlargeFactor: 0.15,
+        ),
+      ),
+    );
+  }
+
+  // Error slide widget
+  Widget _buildErrorSlide() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            bgColor.withValues(alpha: 0.3),
+            bgColor.withValues(alpha: 0.1),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              height: 60,
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Shree Balaji',
+              style: TextStyle(
+                color: bgColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -607,7 +870,7 @@ class _RatePageState extends State<RatePage>
                     ),
                     child: CircleAvatar(
                       radius: 20,
-                      backgroundImage: AssetImage('assets/images/l.png'),
+                      backgroundImage: AssetImage('assets/images/logo.png'),
                       // imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
                       backgroundColor: Colors.grey[300],
                       child: imageUrl.isEmpty
@@ -647,77 +910,234 @@ class _RatePageState extends State<RatePage>
     Color rateColor,
   ) {
     int newRate = int.parse(rate);
-
-    // If mcx is true, add metalRate, otherwise just show newRate.
     int displayedRate = mcx ? newRate + metalRate : newRate;
 
-    return Card(
-      elevation: 3,
-      shadowColor: Colors.grey.withOpacity(0.2),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+    // Determine gradient colors based on metal type
+    List<Color> gradientColors;
+    Color accentColor;
+
+    if (name.toLowerCase().contains('gold')) {
+      gradientColors = [Color(0xFFFFD700), Color(0xFFFFA500)];
+      accentColor = Color(0xFFFFD700);
+    } else if (name.toLowerCase().contains('silver')) {
+      gradientColors = [Color(0xFFC0C0C0), Color(0xFF808080)];
+      accentColor = Color(0xFFC0C0C0);
+    } else {
+      gradientColors = [app_info.primaryColor, app_info.primaryLightColor];
+      accentColor = app_info.primaryColor;
+    }
+
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.44,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white,
+            accentColor.withValues(alpha: 0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: accentColor.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: Offset(0, 5),
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
       ),
-      child: SizedBox(
-        width: 150,
-        height: 130,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(assetUrl, height: 40),
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            // Decorative circles
+            Positioned(
+              top: -20,
+              right: -20,
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      accentColor.withValues(alpha: 0.1),
+                      accentColor.withValues(alpha: 0.0),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(
-                    "    \u20b9 $displayedRate   ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+            ),
+            Positioned(
+              bottom: -15,
+              left: -15,
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      accentColor.withValues(alpha: 0.1),
+                      accentColor.withValues(alpha: 0.0),
+                    ],
                   ),
-                  if (mcx)
-                    Icon(
-                      rateColor == Colors.green
-                          ? Icons.arrow_drop_up
-                          : Icons.arrow_drop_down,
-                      color: rateColor,
-                    ),
-                ],
+                ),
               ),
-              const SizedBox(height: 5),
-              // Always show high/low values regardless of mcx
-              Row(
+            ),
+
+            // Main content
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '$high',
-                    style: const TextStyle(
-                      fontSize: 8,
-                    ),
+                  // Icon and name row
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: gradientColors,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: accentColor.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          assetUrl,
+                          height: 32,
+                          width: 32,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                            letterSpacing: 0.5,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: Text(
-                      '$low',
-                      style: TextStyle(
-                        fontSize: 10,
+
+                  SizedBox(height: 12),
+
+                  // Rate display
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          accentColor.withValues(alpha: 0.15),
+                          accentColor.withValues(alpha: 0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: accentColor.withValues(alpha: 0.3),
+                        width: 1,
                       ),
                     ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '₹',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(width: 2),
+                            Text(
+                              displayedRate.toString(),
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (mcx)
+                          Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: rateColor.withValues(alpha: 0.15),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              rateColor == Colors.green
+                                  ? Icons.arrow_upward_rounded
+                                  : Icons.arrow_downward_rounded,
+                              color: rateColor,
+                              size: 18,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 8),
+
+                  // Update time
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time_rounded,
+                        size: 12,
+                        color: Colors.grey[600],
+                      ),
+                      SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          low,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

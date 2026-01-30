@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sbt.sbt"
+    namespace = "com.sbt.sbtunch"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -24,11 +24,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.sbt.sbt"
+        applicationId = "com.sbt.sbtunch"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
-        versionCode = 60
-        versionName = "2.0.10"
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
         multiDexEnabled = true
     }
 

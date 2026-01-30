@@ -16,12 +16,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../constant/app_info.dart';
+import '../../constant/app_info.dart' as app_info;
 import '../main_screens/Mcx.dart';
 import '../main_screens/bank_page.dart';
 import '../main_screens/gallery.dart';
 import '../main_screens/rate_page.dart';
-import 'package:shreebalaji_tounch/constant/app_info.dart' as app_info;
 
 class MyBottomBar extends StatefulWidget {
   const MyBottomBar({super.key});
@@ -122,16 +121,16 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   Widget _buildDrawer() {
     return Drawer(
-      elevation: 10,
+      elevation: 20,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.white,
-              Color(0xFFFAF0E6),
-              Color(0xFFFFE4E1),
+              Color(0xFFF8F9FA),
+              Color(0xFFFFFFFF),
+              Color(0xFFF0F4F8),
             ],
           ),
         ),
@@ -139,84 +138,159 @@ class _MyBottomBarState extends State<MyBottomBar> {
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.zero,
           children: [
+            // Stunning Header
             Container(
-              height: 260,
+              height: 280,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF800000),
-                    Color(0xFF5D0000),
+                    app_info.primaryColor,
+                    app_info.primaryLightColor,
+                    app_info.accentColor,
                   ],
+                  stops: [0.0, 0.5, 1.0],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
+                    color: app_info.primaryColor.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: Offset(0, 10),
+                    spreadRadius: 2,
                   ),
                 ],
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(40),
-                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Stack(
                 children: [
-                  Hero(
-                    tag: 'drawer_logo',
+                  // Animated circles
+                  Positioned(
+                    top: -50,
+                    right: -50,
                     child: Container(
-                      padding: const EdgeInsets.all(8.0),
+                      width: 150,
+                      height: 150,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white.withOpacity(0.3),
-                            blurRadius: 15,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Image.asset(
-                        "assets/images/logo.png",
-                        height: 160,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    "Shree Balaji",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(0.3),
-                          offset: Offset(1, 1),
-                          blurRadius: 3,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.white.withValues(alpha: 0.15),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      "Tunch ",
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.95),
-                        fontSize: 16,
-                        fontStyle: FontStyle.italic,
-                        letterSpacing: 1,
                       ),
                     ),
+                  ),
+                  Positioned(
+                    bottom: -30,
+                    left: -30,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.white.withValues(alpha: 0.15),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 40),
+                      // Logo
+                      Hero(
+                        tag: 'drawer_logo',
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white.withValues(alpha: 0.3),
+                                Colors.white.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withValues(alpha: 0.5),
+                                blurRadius: 30,
+                                spreadRadius: 10,
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.4),
+                              width: 3,
+                            ),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Image.asset(
+                              "assets/images/logo.png",
+                              height: 100,
+                              width: 100,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ShaderMask(
+                        shaderCallback: (bounds) {
+                          return LinearGradient(
+                            colors: [
+                              Colors.white,
+                              app_info.amberColor,
+                              Colors.white
+                            ],
+                          ).createShader(bounds);
+                        },
+                        child: Text(
+                          "Shree Balaji",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.white.withValues(alpha: 0.25),
+                              Colors.white.withValues(alpha: 0.15),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          "Computer Tunch & Lager Solding Center",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -231,39 +305,68 @@ class _MyBottomBarState extends State<MyBottomBar> {
             ),
             SizedBox(height: 10),
 
-            // Menu Items with improved design
-            _buildDrawerItem(
-              icon: Icons.shopping_bag_outlined,
-              title: 'shop_now'.tr,
-              onTap: () {
-                Get.to(() => ShopNow());
-              },
-            ),
-            _buildDrawerItem(
-              icon: Icons.star_border_outlined,
-              title: 'leave_review'.tr,
-              onTap: () {
-                Navigator.pop(context);
-                if (a.Platform.isAndroid) {
-                  openGooglePlayStore();
-                } else if (a.Platform.isIOS) {
-                  openAppStore();
-                }
-              },
-            ),
-            _buildDrawerItem(
-              icon: Icons.share_outlined,
-              title: 'share_app'.tr,
-              onTap: () {
-                Navigator.pop(context);
-                try {
-                  if (a.Platform.isAndroid) {
-                    Share.share("$projectName\n$androidLink$packageName\n");
-                  } else {
-                    Share.share("$projectName\n$iosLink$iosAppId");
-                  }
-                } catch (e) {}
-              },
+            // Menu Items with stunning gradient cards
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                children: [
+                  _buildModernMenuItem(
+                    icon: Icons.shopping_bag_rounded,
+                    title: 'shop_now'.tr,
+                    gradient: LinearGradient(
+                      colors: [
+                        app_info.primaryColor,
+                        app_info.primaryLightColor,
+                      ],
+                    ),
+                    onTap: () {
+                      Get.to(() => ShopNow());
+                    },
+                  ),
+                  SizedBox(height: 12),
+                  _buildModernMenuItem(
+                    icon: Icons.star_rounded,
+                    title: 'leave_review'.tr,
+                    gradient: LinearGradient(
+                      colors: [
+                        app_info.amberColor,
+                        app_info.orangeColor,
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (a.Platform.isAndroid) {
+                        openGooglePlayStore();
+                      } else if (a.Platform.isIOS) {
+                        openAppStore();
+                      }
+                    },
+                  ),
+                  SizedBox(height: 12),
+                  _buildModernMenuItem(
+                    icon: Icons.share_rounded,
+                    title: 'share_app'.tr,
+                    gradient: LinearGradient(
+                      colors: [
+                        app_info.accentColor,
+                        app_info.primaryLightColor,
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      try {
+                        if (a.Platform.isAndroid) {
+                          Share.share(
+                              "${app_info.projectName}\n${app_info.androidLink}${app_info.packageName}\n");
+                        } else {
+                          Share.share(
+                              "${app_info.projectName}\n${app_info.iosLink}${app_info.iosAppId}");
+                        }
+                      } catch (e) {}
+                    },
+                  ),
+                ],
+              ),
             ),
 
             // Settings section with modernized design
@@ -271,13 +374,13 @@ class _MyBottomBarState extends State<MyBottomBar> {
               data: Theme.of(context).copyWith(
                 dividerColor: Colors.transparent,
                 colorScheme: ColorScheme.light(
-                  primary: Color(0xFF800000),
+                  primary: app_info.primaryColor,
                 ),
               ),
               child: ExpansionTile(
                 leading: Icon(
                   Icons.settings_outlined,
-                  color: Color(0xFF800000),
+                  color: app_info.primaryColor,
                   size: 26,
                 ),
                 title: Text(
@@ -285,11 +388,11 @@ class _MyBottomBarState extends State<MyBottomBar> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF800000),
+                    color: app_info.primaryColor,
                   ),
                 ),
-                iconColor: Color(0xFF800000),
-                collapsedIconColor: Color(0xFF800000),
+                iconColor: app_info.primaryColor,
+                collapsedIconColor: app_info.primaryColor,
                 children: [
                   // Language Selector
                   Padding(
@@ -309,13 +412,13 @@ class _MyBottomBarState extends State<MyBottomBar> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Color(0xFF800000).withOpacity(0.2),
+                            color: app_info.primaryColor.withOpacity(0.2),
                             blurRadius: 8,
                             offset: Offset(0, 3),
                           ),
                         ],
                         border: Border.all(
-                          color: Color(0xFF800000).withOpacity(0.2),
+                          color: app_info.primaryColor.withOpacity(0.2),
                           width: 1,
                         ),
                       ),
@@ -326,7 +429,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                             children: [
                               Icon(
                                 Icons.language,
-                                color: Color(0xFF800000),
+                                color: app_info.primaryColor,
                                 size: 22,
                               ),
                               SizedBox(width: 10),
@@ -335,7 +438,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF800000),
+                                  color: app_info.primaryColor,
                                 ),
                               ),
                             ],
@@ -427,31 +530,31 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
             SizedBox(height: Get.height * 0.05),
 
-            // Social Media Icons with new design
+            // Social Media Section with stunning design
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: EdgeInsets.all(24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white,
-                    Color(0xFFFFE4E1),
+                    app_info.primaryColor.withOpacity(0.1),
+                    app_info.accentColor.withOpacity(0.05),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF800000).withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 8,
-                    offset: Offset(0, 3),
+                    color: app_info.primaryColor.withOpacity(0.15),
+                    spreadRadius: 2,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
                   ),
                 ],
                 border: Border.all(
-                  color: Color(0xFF800000).withOpacity(0.3),
-                  width: 1,
+                  color: app_info.primaryColor.withOpacity(0.2),
+                  width: 1.5,
                 ),
               ),
               child: Column(
@@ -459,48 +562,81 @@ class _MyBottomBarState extends State<MyBottomBar> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.favorite,
-                        color: Color(0xFF800000),
-                        size: 22,
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              app_info.primaryColor,
+                              app_info.accentColor,
+                            ],
+                          ),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: app_info.primaryColor.withOpacity(0.4),
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.favorite_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Follow Us',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF800000),
-                          letterSpacing: 1,
+                      SizedBox(width: 12),
+                      ShaderMask(
+                        shaderCallback: (bounds) {
+                          return LinearGradient(
+                            colors: [
+                              app_info.primaryColor,
+                              app_info.accentColor,
+                            ],
+                          ).createShader(bounds);
+                        },
+                        child: Text(
+                          'Follow Us',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 1.2,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 18),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _socialButton(
+                      _buildStunningSocialButton(
                         FontAwesomeIcons.instagram,
-                        Colors.purple,
+                        [
+                          Color(0xFFC13584),
+                          Color(0xFFE1306C),
+                          Color(0xFFFD1D1D)
+                        ],
                         () => _launchUrl(
                             "https://www.instagram.com/theshreebalaji/?igsh=amZnczh0ZnlneGdj"),
                       ),
-                      _socialButton(
+                      _buildStunningSocialButton(
                         FontAwesomeIcons.facebook,
-                        Colors.blue,
+                        [Color(0xFF1877F2), Color(0xFF4267B2)],
                         () => _launchUrl(
                             "https://www.facebook.com/people/Shree-Balaji/pfbid02kvDi8B6qPzswMYHKDo2VLY4ktChFk1GQosHU8GMon8kiTgRxpCQp18dSiiDL5Ha3l/?mibextid=qi2Omg&rdid=xOYclUullAbBqnCK&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FvzNj95cMMoy1j1ig%2F%3Fmibextid%3Dqi2Omg"),
                       ),
-                      _socialButton(
+                      _buildStunningSocialButton(
                         FontAwesomeIcons.youtube,
-                        Colors.red,
+                        [Color(0xFFFF0000), Color(0xFFCC0000)],
                         () => _launchUrl(
                             "https://www.youtube.com/@shreebalaji6677"),
                       ),
-                      _socialButton(
+                      _buildStunningSocialButton(
                         FontAwesomeIcons.whatsapp,
-                        Colors.green,
+                        [Color(0xFF25D366), Color(0xFF128C7E)],
                         () => _launchWhatsapp("7505891747"),
                       ),
                     ],
@@ -524,23 +660,87 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }) {
     return ListTile(
       contentPadding: padding ?? EdgeInsets.symmetric(horizontal: 20.0),
-      leading: Icon(icon, color: iconColor ?? Color(0xFF800000), size: 26),
+      leading: Icon(icon, color: iconColor ?? app_info.primaryColor, size: 26),
       title: Text(
         title,
         style: TextStyle(
-          color: Color(0xFF800000),
+          color: app_info.primaryColor,
           fontWeight: FontWeight.w500,
           fontSize: 16,
         ),
       ),
       trailing:
-          Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF800000)),
+          Icon(Icons.arrow_forward_ios, size: 16, color: app_info.primaryColor),
       onTap: onTap,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       tileColor: Colors.transparent,
-      hoverColor: Color(0xFF800000).withOpacity(0.1),
+      hoverColor: app_info.primaryColor.withOpacity(0.1),
+    );
+  }
+
+  Widget _buildModernMenuItem({
+    required IconData icon,
+    required String title,
+    required Gradient gradient,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: app_info.primaryColor.withOpacity(0.3),
+              blurRadius: 12,
+              offset: Offset(0, 4),
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.25),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.4),
+                  width: 2,
+                ),
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.white.withOpacity(0.9),
+              size: 18,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -549,7 +749,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
           margin: EdgeInsets.only(bottom: 4),
           decoration: BoxDecoration(
             color: languageController.currentLanguage.value == value
-                ? Color(0xFF800000).withOpacity(0.1)
+                ? app_info.primaryColor.withOpacity(0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
@@ -561,7 +761,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                 fontWeight: languageController.currentLanguage.value == value
                     ? FontWeight.bold
                     : FontWeight.normal,
-                color: Color(0xFF800000),
+                color: app_info.primaryColor,
               ),
             ),
             value: value,
@@ -571,7 +771,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                 languageController.changeLanguage(value);
               }
             },
-            activeColor: Color(0xFF800000),
+            activeColor: app_info.primaryColor,
             dense: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
@@ -619,6 +819,51 @@ class _MyBottomBarState extends State<MyBottomBar> {
     );
   }
 
+  Widget _buildStunningSocialButton(
+    IconData icon,
+    List<Color> gradientColors,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(50),
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradientColors,
+          ),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: gradientColors[0].withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+            BoxShadow(
+              color: Colors.white.withOpacity(0.3),
+              spreadRadius: -2,
+              blurRadius: 8,
+              offset: Offset(-2, -2),
+            ),
+          ],
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+            width: 2,
+          ),
+        ),
+        child: FaIcon(
+          icon,
+          color: Colors.white,
+          size: 26,
+        ),
+      ),
+    );
+  }
+
   AppBar _buildAppBar() {
     return AppBar(
       toolbarHeight: 130,
@@ -633,7 +878,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.sort, size: 30, color: Color(0xFF800000)),
+            child: Icon(Icons.sort, size: 30, color: app_info.primaryColor),
           ),
           onPressed: () {
             if (scaffoldKey.currentState?.isDrawerOpen ?? false) {
@@ -669,7 +914,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0xFF800000).withOpacity(0.25),
+              color: app_info.primaryColor.withOpacity(0.25),
               blurRadius: 12,
               offset: Offset(0, 2),
             )
@@ -688,7 +933,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF800000).withOpacity(0.4),
+                    color: app_info.primaryColor.withOpacity(0.4),
                     blurRadius: 8,
                     spreadRadius: 1,
                     offset: Offset(0, 2),
@@ -696,7 +941,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                 ],
               ),
               child: Icon(Icons.notifications_none_outlined,
-                  size: 30, color: Color(0xFF800000)),
+                  size: 30, color: app_info.primaryColor),
             ),
             onPressed: () {
               // Notification action can be added here
@@ -734,172 +979,296 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }
 
   Widget _buildBottomNavigationBar() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            app_info.primaryColor,
+            app_info.primaryLightColor,
+            app_info.accentColor,
+          ],
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: app_info.primaryColor.withOpacity(0.4),
+            blurRadius: 20,
+            spreadRadius: 2,
+            offset: Offset(0, -5),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Main Navigation Bar
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    icon: Icons.contact_phone_rounded,
+                    label: 'contact_us'.tr,
+                    index: 0,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.account_balance_rounded,
+                    label: 'bank'.tr,
+                    index: 1,
+                  ),
+                  // Center Floating Button
+                  _buildCenterButton(),
+                  _buildNavItem(
+                    icon: Icons.shopping_bag_rounded,
+                    label: 'products'.tr,
+                    index: 3,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.show_chart_rounded,
+                    label: 'mcx'.tr,
+                    index: 4,
+                  ),
+                ],
+              ),
+            ),
+
+            // Footer Section
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    app_info.whiteColor.withOpacity(0.1),
+                    app_info.whiteColor.withOpacity(0.05),
+                  ],
+                ),
+                border: Border(
+                  top: BorderSide(
+                    color: app_info.whiteColor.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.copyright_rounded,
+                        size: 14,
+                        color: app_info.whiteColor.withOpacity(0.9),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        app_info.projectName,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: app_info.whiteColor.withOpacity(0.9),
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          app_info.amberColor,
+                          app_info.orangeColor,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: app_info.amberColor.withOpacity(0.4),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.bolt_rounded,
+                          size: 12,
+                          color: app_info.whiteColor,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          'powered_by'.tr,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: app_info.whiteColor,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+  }) {
+    final isSelected = _selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 16 : 12,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    app_info.whiteColor.withOpacity(0.25),
+                    app_info.whiteColor.withOpacity(0.15),
+                  ],
+                )
+              : null,
+          borderRadius: BorderRadius.circular(20),
+          border: isSelected
+              ? Border.all(
+                  color: app_info.whiteColor.withOpacity(0.3),
+                  width: 1.5,
+                )
+              : null,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              padding: EdgeInsets.all(isSelected ? 8 : 6),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? app_info.whiteColor.withOpacity(0.2)
+                    : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: isSelected
+                    ? app_info.whiteColor
+                    : app_info.whiteColor.withOpacity(0.6),
+                size: isSelected ? 26 : 24,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? app_info.whiteColor
+                    : app_info.whiteColor.withOpacity(0.6),
+                fontSize: isSelected ? 12 : 11,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCenterButton() {
+    final isSelected = _selectedIndex == 2;
+
+    return GestureDetector(
+      onTap: () => _onItemTapped(2),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        transform: Matrix4.translationValues(0, isSelected ? -8 : -5, 0),
+        child: Container(
+          height: 70,
+          width: 70,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF800000), // Maroon
-                Color(0xFF4A0000), // Darker maroon
-              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isSelected
+                  ? [
+                      app_info.amberColor,
+                      app_info.orangeColor,
+                    ]
+                  : [
+                      app_info.whiteColor,
+                      app_info.whiteColor.withOpacity(0.95),
+                    ],
             ),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+            shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: isSelected
+                    ? app_info.amberColor.withOpacity(0.6)
+                    : app_info.whiteColor.withOpacity(0.5),
+                blurRadius: isSelected ? 20 : 15,
+                spreadRadius: isSelected ? 4 : 2,
+              ),
+              BoxShadow(
+                color: app_info.primaryColor.withOpacity(0.3),
                 blurRadius: 10,
-                offset: Offset(0, -2),
+                offset: Offset(0, 5),
               ),
             ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            child: BottomNavigationBar(
-              unselectedItemColor: Colors.white.withOpacity(0.7),
-              selectedItemColor: Colors.white, // White color
-              backgroundColor: Colors.transparent,
-              type: BottomNavigationBarType.fixed,
-              selectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                letterSpacing: 0.5,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-              ),
-              elevation: 0,
-              items: [
-                BottomNavigationBarItem(
-                  backgroundColor: Colors.transparent,
-                  icon: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    padding: EdgeInsets.all(_selectedIndex == 0 ? 8 : 0),
-                    decoration: BoxDecoration(
-                      color: _selectedIndex == 0
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Icon(Icons.contact_phone),
-                  ),
-                  label: 'contact_us'.tr,
-                ),
-                BottomNavigationBarItem(
-                  backgroundColor: Colors.transparent,
-                  icon: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    padding: EdgeInsets.all(_selectedIndex == 1 ? 8 : 0),
-                    decoration: BoxDecoration(
-                      color: _selectedIndex == 1
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Icon(Icons.account_balance),
-                  ),
-                  label: 'bank'.tr,
-                ),
-                BottomNavigationBarItem(
-                  backgroundColor: Colors.transparent,
-                  icon: Container(
-                    height: 60,
-                    width: 60,
-                    padding: EdgeInsets.all(8),
-                    margin: EdgeInsets.only(bottom: 5),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white.withOpacity(0.8),
-                            spreadRadius: 2,
-                            blurRadius: 8,
-                          )
-                        ]),
-                    child: const Icon(Icons.bar_chart_sharp,
-                        color: Color(0xFF800000), size: 30),
-                  ),
-                  label: 'live_bhaw'.tr,
-                ),
-                BottomNavigationBarItem(
-                  icon: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    padding: EdgeInsets.all(_selectedIndex == 3 ? 8 : 0),
-                    decoration: BoxDecoration(
-                      color: _selectedIndex == 3
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Icon(Icons.production_quantity_limits),
-                  ),
-                  label: 'products'.tr,
-                  backgroundColor: Colors.transparent,
-                ),
-                BottomNavigationBarItem(
-                  icon: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    padding: EdgeInsets.all(_selectedIndex == 4 ? 8 : 0),
-                    decoration: BoxDecoration(
-                      color: _selectedIndex == 4
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Icon(Icons.launch),
-                  ),
-                  label: 'mcx'.tr,
-                  backgroundColor: Colors.transparent,
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
+            border: Border.all(
+              color: app_info.whiteColor.withOpacity(0.3),
+              width: 3,
             ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(
-              color: Color(0xFF800000).withOpacity(0.2),
-              blurRadius: 4,
-              offset: Offset(0, -1),
-            )
-          ]),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                '@ $projectName',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF800000),
-                  fontWeight: FontWeight.w600,
-                ),
+              Icon(
+                Icons.bar_chart_rounded,
+                color: isSelected ? app_info.whiteColor : app_info.primaryColor,
+                size: 32,
               ),
+              SizedBox(height: 2),
               Text(
-                'powered_by'.tr,
+                'live_bhaw'.tr,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF800000),
-                  fontWeight: FontWeight.w600,
+                  color:
+                      isSelected ? app_info.whiteColor : app_info.primaryColor,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.3,
                 ),
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -931,7 +1300,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   void openGooglePlayStore() async {
     final url =
-        'https://play.google.com/store/apps/details?id=$packageName&hl=en';
+        'https://play.google.com/store/apps/details?id=${app_info.packageName}&hl=en';
 
     if (await canLaunch(url)) {
       await launch(url);
@@ -955,7 +1324,9 @@ class _MyBottomBarState extends State<MyBottomBar> {
         child: Marquee(
           text: messages1,
           style: TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white),
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: app_info.whiteColor),
           scrollAxis: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.start,
           blankSpace: 20.0,

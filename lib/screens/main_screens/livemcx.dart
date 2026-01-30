@@ -1,14 +1,6 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'mcxdata.dart';
 
 class ShopNow extends StatefulWidget {
   const ShopNow({super.key});

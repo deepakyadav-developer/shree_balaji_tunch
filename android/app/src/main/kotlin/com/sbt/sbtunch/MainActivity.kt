@@ -1,4 +1,4 @@
-package com.sbt.sbt
+package com.sbt.sbtunch
 
 import io.flutter.embedding.android.FlutterActivity
 

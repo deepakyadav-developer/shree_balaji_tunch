@@ -23,13 +23,6 @@ import 'constant/APP_INFO.dart';
 var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 FlutterTts flutterTts = FlutterTts();
 
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-//   runApp(GetMaterialApp(
-
-// }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -84,7 +77,7 @@ class MyApp extends StatelessWidget {
       locale: initialLocale,
       fallbackLocale: Locale('en', 'US'),
       initialBinding: InitialBindings(),
-      title: 'Flutter Demo',
+      title: 'Shree Balaji Tunch',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: bgColor,

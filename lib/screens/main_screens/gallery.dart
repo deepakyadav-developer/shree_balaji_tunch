@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shreebalaji_tounch/constant/APP_INFO.dart';
+import 'package:shreebalaji_tounch/constant/app_info.dart' as app_info;
 import 'package:shreebalaji_tounch/screens/main_screens/play_video.dart';
 import 'package:shreebalaji_tounch/screens/main_screens/product_page.dart';
 
@@ -24,23 +24,23 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-          backgroundColor: whiteColor,
+          backgroundColor: app_info.whiteColor,
           appBar: AppBar(
-            backgroundColor: bgColor,
+            backgroundColor: app_info.bgColor,
             elevation: 0,
             title: Text(
               "Gallery",
               style: TextStyle(
-                color: goldColor,
+                color: app_info.goldColor,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
             ),
             centerTitle: true,
             bottom: TabBar(
-              unselectedLabelColor: Colors.white.withOpacity(0.7),
-              labelColor: goldColor,
-              indicatorColor: goldColor,
+              unselectedLabelColor: Colors.white.withValues(alpha: 0.7),
+              labelColor: app_info.goldColor,
+              indicatorColor: app_info.goldColor,
               indicatorWeight: 3,
               labelStyle: TextStyle(
                 fontSize: 18,
@@ -75,17 +75,42 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(goldColor),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/logo.png",
+                    height: 120,
+                  ),
+                  SizedBox(height: 20),
+                  CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(app_info.goldColor),
+                  ),
+                ],
               ),
             );
           }
 
           if (snapshot.data!.docs.isEmpty) {
             return Center(
-              child: Text(
-                'No categories available',
-                style: TextStyle(fontSize: 18, color: bgColor),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/logo.png",
+                    height: 150,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'No categories available',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: app_info.bgColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             );
           }
@@ -119,7 +144,7 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: Offset(0, 3),
           ),
@@ -148,12 +173,23 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                     tag: 'galleryImage$id',
                     child: Container(
                       decoration: BoxDecoration(
-                        color: bgColor.withOpacity(0.1),
+                        color: app_info.bgColor.withValues(alpha: 0.1),
                       ),
                       child: CachedNetworkImage(
                         placeholder: (context, url) {
                           return Container(
-                            color: bgColor.withOpacity(0.1),
+                            color: app_info.bgColor.withValues(alpha: 0.1),
+                            child: Center(
+                              child: Image.asset(
+                                "assets/images/logo.png",
+                                height: 60,
+                              ),
+                            ),
+                          );
+                        },
+                        errorWidget: (context, url, error) {
+                          return Container(
+                            color: app_info.bgColor.withValues(alpha: 0.05),
                             child: Center(
                               child: Image.asset(
                                 "assets/images/logo.png",
@@ -171,13 +207,13 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: bgColor,
+                    color: app_info.bgColor,
                   ),
                   child: Center(
                     child: Text(
                       categoryName,
                       style: TextStyle(
-                        color: goldColor,
+                        color: app_info.goldColor,
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
@@ -204,17 +240,41 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(goldColor),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/logo.png",
+                  height: 120,
+                ),
+                SizedBox(height: 20),
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(app_info.goldColor),
+                ),
+              ],
             ),
           );
         }
 
         if (snapshot.data!.docs.isEmpty) {
           return Center(
-            child: Text(
-              'No videos available',
-              style: TextStyle(fontSize: 18, color: bgColor),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/logo.png",
+                  height: 150,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'No videos available',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: app_info.bgColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -234,7 +294,7 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: Offset(0, 3),
                     ),
@@ -262,30 +322,43 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                                   imageUrl: thumbnail,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => Container(
-                                    color: bgColor.withOpacity(0.1),
+                                    color:
+                                        app_info.bgColor.withValues(alpha: 0.1),
                                     child: Center(
                                       child: CircularProgressIndicator(
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                goldColor),
+                                                app_info.goldColor),
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    color: app_info.bgColor
+                                        .withValues(alpha: 0.05),
+                                    child: Center(
+                                      child: Image.asset(
+                                        "assets/images/logo.png",
+                                        height: 80,
                                       ),
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                 ),
                                 Center(
                                   child: Container(
                                     padding: EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: goldColor.withOpacity(0.8),
+                                      color: app_info.goldColor
+                                          .withValues(alpha: 0.8),
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
                                       Icons.play_arrow,
                                       size: 42,
-                                      color: bgColor,
+                                      color: app_info.bgColor,
                                     ),
                                   ),
                                 ),
@@ -298,7 +371,7 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                               children: [
                                 Icon(
                                   Icons.video_collection,
-                                  color: bgColor,
+                                  color: app_info.bgColor,
                                   size: 20,
                                 ),
                                 SizedBox(width: 8),
@@ -307,7 +380,7 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
-                                    color: bgColor,
+                                    color: app_info.bgColor,
                                   ),
                                 ),
                               ],
