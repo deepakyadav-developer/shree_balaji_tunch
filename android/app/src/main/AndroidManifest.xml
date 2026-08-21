@@ -34,7 +34,7 @@
         </intent>
     </queries>
     <application
-        android:label="Shree Balaji Tounch"
+        android:label="Shree Balaji Store"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

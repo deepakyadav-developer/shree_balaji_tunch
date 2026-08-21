@@ -414,7 +414,7 @@ class SplashScreenState extends State<SplashScreen>
                           ).createShader(bounds);
                         },
                         child: Text(
-                          'Shree Balaji Tunch',
+                          'Shree Balaji Store',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: app_info.whiteColor,

@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
       locale: initialLocale,
       fallbackLocale: Locale('en', 'US'),
       initialBinding: InitialBindings(),
-      title: 'Shree Balaji Tunch',
+      title: 'Shree Balaji Store',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: bgColor,

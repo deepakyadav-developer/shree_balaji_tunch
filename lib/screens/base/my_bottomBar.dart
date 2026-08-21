@@ -121,218 +121,331 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   Widget _buildDrawer() {
     return Drawer(
-      elevation: 20,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFF8F9FA),
-              Color(0xFFFFFFFF),
-              Color(0xFFF0F4F8),
+              Color(0xFF0A0E27),
+              Color(0xFF0D1442),
+              Color(0xFF131A50),
+              Color(0xFF0A0E27),
             ],
+            stops: [0.0, 0.3, 0.7, 1.0],
           ),
         ),
         child: ListView(
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.zero,
           children: [
-            // Stunning Header
+            // ✨ Premium Header with floating orbs
             Container(
-              height: 280,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    app_info.primaryColor,
-                    app_info.primaryLightColor,
-                    app_info.accentColor,
-                  ],
-                  stops: [0.0, 0.5, 1.0],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: app_info.primaryColor.withValues(alpha: 0.4),
-                    blurRadius: 20,
-                    offset: Offset(0, 10),
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
+              height: 310,
               child: Stack(
                 children: [
-                  // Animated circles
+                  // Background gradient with wave
+                  Container(
+                    height: 310,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF1A237E),
+                          Color(0xFF0D47A1),
+                          Color(0xFF1565C0),
+                          Color(0xFF0D1442),
+                        ],
+                        stops: [0.0, 0.3, 0.6, 1.0],
+                      ),
+                    ),
+                  ),
+                  // Decorative floating orbs
                   Positioned(
-                    top: -50,
-                    right: -50,
+                    top: -40,
+                    right: -30,
                     child: Container(
-                      width: 150,
-                      height: 150,
+                      width: 180,
+                      height: 180,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            Colors.white.withValues(alpha: 0.15),
-                            Colors.white.withValues(alpha: 0.0),
+                            Color(0xFFFFD700).withOpacity(0.15),
+                            Color(0xFFFFD700).withOpacity(0.05),
+                            Colors.transparent,
                           ],
+                          stops: [0.0, 0.5, 1.0],
                         ),
                       ),
                     ),
                   ),
                   Positioned(
-                    bottom: -30,
-                    left: -30,
+                    bottom: -50,
+                    left: -40,
                     child: Container(
-                      width: 120,
-                      height: 120,
+                      width: 160,
+                      height: 160,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            Colors.white.withValues(alpha: 0.15),
-                            Colors.white.withValues(alpha: 0.0),
+                            Color(0xFF448AFF).withOpacity(0.2),
+                            Color(0xFF448AFF).withOpacity(0.05),
+                            Colors.transparent,
+                          ],
+                          stops: [0.0, 0.5, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 60,
+                    left: -20,
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.white.withOpacity(0.08),
+                            Colors.transparent,
                           ],
                         ),
                       ),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 40),
-                      // Logo
-                      Hero(
-                        tag: 'drawer_logo',
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.white.withValues(alpha: 0.3),
-                                Colors.white.withValues(alpha: 0.1),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withValues(alpha: 0.5),
-                                blurRadius: 30,
-                                spreadRadius: 10,
-                              ),
-                            ],
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.4),
-                              width: 3,
-                            ),
+                  // Sparkle dots
+                  Positioned(
+                    top: 45,
+                    right: 50,
+                    child: Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFFD700).withOpacity(0.6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFFFFD700).withOpacity(0.4),
+                            blurRadius: 8,
+                            spreadRadius: 2,
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 100,
+                    right: 30,
+                    child: Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.4),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.3),
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 80,
+                    right: 60,
+                    child: Container(
+                      width: 5,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF64B5F6).withOpacity(0.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF64B5F6).withOpacity(0.3),
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Main content
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 50),
+                        // Glowing Logo Container
+                        Hero(
+                          tag: 'drawer_logo',
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              gradient: SweepGradient(
+                                colors: [
+                                  Color(0xFFFFD700),
+                                  Color(0xFFFFA726),
+                                  Color(0xFFFFD700),
+                                  Color(0xFFFF8F00),
+                                  Color(0xFFFFD700),
+                                ],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFFFFD700).withOpacity(0.4),
+                                  blurRadius: 25,
+                                  spreadRadius: 5,
+                                ),
+                                BoxShadow(
+                                  color: Color(0xFF1A237E).withOpacity(0.5),
+                                  blurRadius: 40,
+                                  spreadRadius: -5,
+                                ),
+                              ],
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFF0D1442),
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.2),
+                                      blurRadius: 15,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: Image.asset(
+                                  "assets/images/logo.png",
+                                  height: 85,
+                                  width: 85,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 18),
+                        // Premium name with gold shimmer
+                        ShaderMask(
+                          shaderCallback: (bounds) {
+                            return LinearGradient(
+                              colors: [
+                                Color(0xFFFFD700),
+                                Color(0xFFFFF8E1),
+                                Color(0xFFFFD700),
+                                Color(0xFFFFF8E1),
+                                Color(0xFFFFD700),
+                              ],
+                              stops: [0.0, 0.25, 0.5, 0.75, 1.0],
+                            ).createShader(bounds);
+                          },
+                          child: Text(
+                            "Shree Balaji",
+                            style: TextStyle(
                               color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 3,
+                              shadows: [
+                                Shadow(
+                                  color: Color(0xFFFFD700).withOpacity(0.5),
+                                  blurRadius: 20,
+                                ),
+                              ],
                             ),
-                            child: Image.asset(
-                              "assets/images/logo.png",
-                              height: 100,
-                              width: 100,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Subtitle pill
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 7),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white.withOpacity(0.12),
+                                Colors.white.withOpacity(0.06),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: Color(0xFFFFD700).withOpacity(0.3),
+                              width: 1,
                             ),
                           ),
+                          child: Text(
+                            "Computer Store & Laser Solding Center",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.85),
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Bottom fade line
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.transparent,
+                            Color(0xFFFFD700).withOpacity(0.5),
+                            Colors.transparent,
+                          ],
                         ),
                       ),
-                      SizedBox(height: 20),
-                      ShaderMask(
-                        shaderCallback: (bounds) {
-                          return LinearGradient(
-                            colors: [
-                              Colors.white,
-                              app_info.amberColor,
-                              Colors.white
-                            ],
-                          ).createShader(bounds);
-                        },
-                        child: Text(
-                          "Shree Balaji",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.white.withValues(alpha: 0.25),
-                              Colors.white.withValues(alpha: 0.15),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Text(
-                          "Computer Tunch & Lager Solding Center",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.8,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
 
-            Divider(
-              thickness: 1,
-              color: Colors.amber.withOpacity(0.5),
-              indent: 20,
-              endIndent: 20,
-            ),
-            SizedBox(height: 10),
+            SizedBox(height: 24),
 
-            // Menu Items with stunning gradient cards
+            // ✨ Premium Menu Items
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  _buildModernMenuItem(
+                  _buildPremiumMenuItem(
                     icon: Icons.shopping_bag_rounded,
                     title: 'shop_now'.tr,
-                    gradient: LinearGradient(
-                      colors: [
-                        app_info.primaryColor,
-                        app_info.primaryLightColor,
-                      ],
-                    ),
+                    subtitle: 'Browse our collection',
+                    iconGradient: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                     onTap: () {
                       Get.to(() => ShopNow());
                     },
                   ),
-                  SizedBox(height: 12),
-                  _buildModernMenuItem(
+                  SizedBox(height: 10),
+                  _buildPremiumMenuItem(
                     icon: Icons.star_rounded,
                     title: 'leave_review'.tr,
-                    gradient: LinearGradient(
-                      colors: [
-                        app_info.amberColor,
-                        app_info.orangeColor,
-                      ],
-                    ),
+                    subtitle: 'Rate us on store',
+                    iconGradient: [Color(0xFFFFB800), Color(0xFFFF8F00)],
                     onTap: () {
                       Navigator.pop(context);
                       if (a.Platform.isAndroid) {
@@ -342,16 +455,12 @@ class _MyBottomBarState extends State<MyBottomBar> {
                       }
                     },
                   ),
-                  SizedBox(height: 12),
-                  _buildModernMenuItem(
+                  SizedBox(height: 10),
+                  _buildPremiumMenuItem(
                     icon: Icons.share_rounded,
                     title: 'share_app'.tr,
-                    gradient: LinearGradient(
-                      colors: [
-                        app_info.accentColor,
-                        app_info.primaryLightColor,
-                      ],
-                    ),
+                    subtitle: 'Share with friends',
+                    iconGradient: [Color(0xFF06B6D4), Color(0xFF0891B2)],
                     onTap: () {
                       Navigator.pop(context);
                       try {
@@ -369,279 +478,308 @@ class _MyBottomBarState extends State<MyBottomBar> {
               ),
             ),
 
-            // Settings section with modernized design
-            Theme(
-              data: Theme.of(context).copyWith(
-                dividerColor: Colors.transparent,
-                colorScheme: ColorScheme.light(
-                  primary: app_info.primaryColor,
-                ),
-              ),
-              child: ExpansionTile(
-                leading: Icon(
-                  Icons.settings_outlined,
-                  color: app_info.primaryColor,
-                  size: 26,
-                ),
-                title: Text(
-                  'settings'.tr,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: app_info.primaryColor,
+            SizedBox(height: 20),
+
+            // ✨ Glassmorphism Settings Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withOpacity(0.08),
+                      Colors.white.withOpacity(0.03),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
                   ),
                 ),
-                iconColor: app_info.primaryColor,
-                collapsedIconColor: app_info.primaryColor,
-                children: [
-                  // Language Selector
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 12.0),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,
+                  ),
+                  child: ExpansionTile(
+                    leading: Container(
+                      padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.white,
-                            Color(0xFFFFE4E1),
-                          ],
+                          colors: [Color(0xFF94A3B8), Color(0xFF64748B)],
                         ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: app_info.primaryColor.withOpacity(0.2),
+                            color: Color(0xFF94A3B8).withOpacity(0.3),
                             blurRadius: 8,
-                            offset: Offset(0, 3),
+                            offset: Offset(0, 2),
                           ),
                         ],
-                        border: Border.all(
-                          color: app_info.primaryColor.withOpacity(0.2),
-                          width: 1,
-                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.language,
-                                color: app_info.primaryColor,
-                                size: 22,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                'language'.tr,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: app_info.primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-                          _buildLanguageOption('en_US', 'english'.tr),
-                          _buildLanguageOption('hi_IN', 'hindi'.tr),
-                          _buildLanguageOption('bho_IN', 'bhojpuri'.tr),
-                        ],
+                      child: Icon(
+                        Icons.settings_rounded,
+                        color: Colors.white,
+                        size: 20,
                       ),
                     ),
-                  ),
-
-                  // Account Management Options
-                  id == null || id == ''
-                      ? SizedBox()
-                      : _buildDrawerItem(
-                          icon: Icons.delete_outline,
-                          title: 'deactivate_account'.tr,
-                          iconColor: Colors.red,
-                          padding: EdgeInsets.only(left: 32.0, right: 16.0),
-                          onTap: () async {
-                            Navigator.pop(context);
-                            SharedPreferences pref =
-                                await SharedPreferences.getInstance();
-                            String? id = pref.getString('mobile');
-                            print('Drawer Id -------${id}');
-
-                            showDialog<void>(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('delete_account'.tr),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      children: <Widget>[
-                                        Text('delete_confirmation'.tr),
-                                      ],
+                    title: Text(
+                      'settings'.tr,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withOpacity(0.9),
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    iconColor: Colors.white.withOpacity(0.7),
+                    collapsedIconColor: Colors.white.withOpacity(0.5),
+                    children: [
+                      // Language Selector
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Container(
+                          padding: EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withOpacity(0.07),
+                                Colors.white.withOpacity(0.03),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.08),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.language_rounded,
+                                    color: Color(0xFF64B5F6),
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'language'.tr,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white.withOpacity(0.9),
                                     ),
                                   ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('yes'.tr),
-                                      onPressed: () {
-                                        if (id != null) {
-                                          FirebaseFirestore.instance
-                                              .collection('register')
-                                              .doc(id)
-                                              .delete();
-                                        }
-                                        pref.clear();
-                                        Navigator.of(context).pop();
-                                        Get.offAll(() => MyRegister());
-                                        Fluttertoast.showToast(
-                                            msg: "Your account is deleted");
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text('no'.tr),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              _buildLanguageOption('en_US', 'english'.tr),
+                              _buildLanguageOption('hi_IN', 'hindi'.tr),
+                              _buildLanguageOption('bho_IN', 'bhojpuri'.tr),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Account Management Options
+                      id == null || id == ''
+                          ? SizedBox()
+                          : _buildDarkDrawerItem(
+                              icon: Icons.delete_outline_rounded,
+                              title: 'deactivate_account'.tr,
+                              iconColor: Color(0xFFEF4444),
+                              onTap: () async {
+                                Navigator.pop(context);
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
+                                String? id = pref.getString('mobile');
+                                print('Drawer Id -------${id}');
+
+                                showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('delete_account'.tr),
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text('delete_confirmation'.tr),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('yes'.tr),
+                                          onPressed: () {
+                                            if (id != null) {
+                                              FirebaseFirestore.instance
+                                                  .collection('register')
+                                                  .doc(id)
+                                                  .delete();
+                                            }
+                                            pref.clear();
+                                            Navigator.of(context).pop();
+                                            Get.offAll(() => MyRegister());
+                                            Fluttertoast.showToast(
+                                                msg: "Your account is deleted");
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('no'.tr),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
-                        ),
-                  id == null || id == ''
-                      ? SizedBox()
-                      : _buildDrawerItem(
-                          icon: Icons.logout,
-                          title: 'logout'.tr,
-                          padding: EdgeInsets.only(left: 32.0, right: 16.0),
-                          onTap: () async {
-                            Navigator.pop(context);
-                            SharedPreferences sp =
-                                await SharedPreferences.getInstance();
-                            sp.setString('mobile', '');
-                            sp.setString('useId', '');
-                            Get.offAll(() => MyRegister());
-                          },
-                        ),
-                ],
+                            ),
+                      id == null || id == ''
+                          ? SizedBox()
+                          : _buildDarkDrawerItem(
+                              icon: Icons.logout_rounded,
+                              title: 'logout'.tr,
+                              iconColor: Color(0xFFF97316),
+                              onTap: () async {
+                                Navigator.pop(context);
+                                SharedPreferences sp =
+                                    await SharedPreferences.getInstance();
+                                sp.setString('mobile', '');
+                                sp.setString('useId', '');
+                                Get.offAll(() => MyRegister());
+                              },
+                            ),
+                      SizedBox(height: 8),
+                    ],
+                  ),
+                ),
               ),
             ),
 
-            SizedBox(height: Get.height * 0.05),
+            SizedBox(height: 24),
 
-            // Social Media Section with stunning design
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              padding: EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    app_info.primaryColor.withOpacity(0.1),
-                    app_info.accentColor.withOpacity(0.05),
+            // ✨ Neon Social Media Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withOpacity(0.06),
+                      Colors.white.withOpacity(0.02),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.08),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    // Follow Us header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                Color(0xFFFFD700).withOpacity(0.5),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'FOLLOW US',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFFFFD700).withOpacity(0.8),
+                            letterSpacing: 3,
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Container(
+                          width: 30,
+                          height: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFFFD700).withOpacity(0.5),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildNeonSocialButton(
+                          FontAwesomeIcons.instagram,
+                          Color(0xFFE1306C),
+                          'Instagram',
+                          () => _launchUrl(
+                              "https://www.instagram.com/theshreebalaji/?igsh=amZnczh0ZnlneGdj"),
+                        ),
+                        _buildNeonSocialButton(
+                          FontAwesomeIcons.facebook,
+                          Color(0xFF1877F2),
+                          'Facebook',
+                          () => _launchUrl(
+                              "https://www.facebook.com/people/Shree-Balaji/pfbid02kvDi8B6qPzswMYHKDo2VLY4ktChFk1GQosHU8GMon8kiTgRxpCQp18dSiiDL5Ha3l/?mibextid=qi2Omg&rdid=xOYclUullAbBqnCK&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FvzNj95cMMoy1j1ig%2F%3Fmibextid%3Dqi2Omg"),
+                        ),
+                        _buildNeonSocialButton(
+                          FontAwesomeIcons.youtube,
+                          Color(0xFFFF0000),
+                          'YouTube',
+                          () => _launchUrl(
+                              "https://www.youtube.com/@shreebalaji6677"),
+                        ),
+                        _buildNeonSocialButton(
+                          FontAwesomeIcons.whatsapp,
+                          Color(0xFF25D366),
+                          'WhatsApp',
+                          () => _launchWhatsapp("7505891747"),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: app_info.primaryColor.withOpacity(0.15),
-                    spreadRadius: 2,
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-                border: Border.all(
-                  color: app_info.primaryColor.withOpacity(0.2),
-                  width: 1.5,
-                ),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              app_info.primaryColor,
-                              app_info.accentColor,
-                            ],
-                          ),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: app_info.primaryColor.withOpacity(0.4),
-                              blurRadius: 8,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.favorite_rounded,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      ShaderMask(
-                        shaderCallback: (bounds) {
-                          return LinearGradient(
-                            colors: [
-                              app_info.primaryColor,
-                              app_info.accentColor,
-                            ],
-                          ).createShader(bounds);
-                        },
-                        child: Text(
-                          'Follow Us',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildStunningSocialButton(
-                        FontAwesomeIcons.instagram,
-                        [
-                          Color(0xFFC13584),
-                          Color(0xFFE1306C),
-                          Color(0xFFFD1D1D)
-                        ],
-                        () => _launchUrl(
-                            "https://www.instagram.com/theshreebalaji/?igsh=amZnczh0ZnlneGdj"),
-                      ),
-                      _buildStunningSocialButton(
-                        FontAwesomeIcons.facebook,
-                        [Color(0xFF1877F2), Color(0xFF4267B2)],
-                        () => _launchUrl(
-                            "https://www.facebook.com/people/Shree-Balaji/pfbid02kvDi8B6qPzswMYHKDo2VLY4ktChFk1GQosHU8GMon8kiTgRxpCQp18dSiiDL5Ha3l/?mibextid=qi2Omg&rdid=xOYclUullAbBqnCK&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FvzNj95cMMoy1j1ig%2F%3Fmibextid%3Dqi2Omg"),
-                      ),
-                      _buildStunningSocialButton(
-                        FontAwesomeIcons.youtube,
-                        [Color(0xFFFF0000), Color(0xFFCC0000)],
-                        () => _launchUrl(
-                            "https://www.youtube.com/@shreebalaji6677"),
-                      ),
-                      _buildStunningSocialButton(
-                        FontAwesomeIcons.whatsapp,
-                        [Color(0xFF25D366), Color(0xFF128C7E)],
-                        () => _launchWhatsapp("7505891747"),
-                      ),
-                    ],
-                  ),
-                ],
+            ),
+
+            SizedBox(height: 24),
+
+            // Bottom branding
+            Center(
+              child: Text(
+                "Made with ❤️ in India",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.25),
+                  fontSize: 11,
+                  letterSpacing: 1,
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -677,6 +815,150 @@ class _MyBottomBarState extends State<MyBottomBar> {
       ),
       tileColor: Colors.transparent,
       hoverColor: app_info.primaryColor.withOpacity(0.1),
+    );
+  }
+
+  // ✨ Premium Menu Item with glassmorphism
+  Widget _buildPremiumMenuItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required List<Color> iconGradient,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        splashColor: Colors.white.withOpacity(0.05),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withOpacity(0.08),
+                Colors.white.withOpacity(0.03),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.08),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              // Gradient icon container
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: iconGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: iconGradient[0].withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+              SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.95),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.4),
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white.withOpacity(0.4),
+                  size: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Dark drawer item for settings subsection
+  Widget _buildDarkDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? iconColor,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          splashColor: Colors.white.withOpacity(0.05),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: iconColor ?? Colors.white.withOpacity(0.7), size: 22),
+                SizedBox(width: 14),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.75),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+                Spacer(),
+                Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.white.withOpacity(0.3)),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -749,19 +1031,24 @@ class _MyBottomBarState extends State<MyBottomBar> {
           margin: EdgeInsets.only(bottom: 4),
           decoration: BoxDecoration(
             color: languageController.currentLanguage.value == value
-                ? app_info.primaryColor.withOpacity(0.1)
+                ? Colors.white.withOpacity(0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
+            border: languageController.currentLanguage.value == value
+                ? Border.all(color: Color(0xFF64B5F6).withOpacity(0.3), width: 1)
+                : null,
           ),
           child: RadioListTile<String>(
             title: Text(
               title,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: languageController.currentLanguage.value == value
                     ? FontWeight.bold
                     : FontWeight.normal,
-                color: app_info.primaryColor,
+                color: languageController.currentLanguage.value == value
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.6),
               ),
             ),
             value: value,
@@ -771,9 +1058,9 @@ class _MyBottomBarState extends State<MyBottomBar> {
                 languageController.changeLanguage(value);
               }
             },
-            activeColor: app_info.primaryColor,
+            activeColor: Color(0xFF64B5F6),
             dense: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -781,7 +1068,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
         ));
   }
 
-  Widget _socialButton(IconData icon, Color color, VoidCallback onTap) {
+  Widget _socialButton(FaIconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(30),
@@ -820,7 +1107,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }
 
   Widget _buildStunningSocialButton(
-    IconData icon,
+    FaIconData icon,
     List<Color> gradientColors,
     VoidCallback onTap,
   ) {
@@ -860,6 +1147,56 @@ class _MyBottomBarState extends State<MyBottomBar> {
           color: Colors.white,
           size: 26,
         ),
+      ),
+    );
+  }
+
+  // ✨ Neon Social Button with glow effect
+  Widget _buildNeonSocialButton(
+    FaIconData icon,
+    Color color,
+    String label,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: color.withOpacity(0.25),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.2),
+                  blurRadius: 15,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: FaIcon(
+              icon,
+              color: color,
+              size: 22,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
       ),
     );
   }

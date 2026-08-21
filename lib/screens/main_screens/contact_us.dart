@@ -126,7 +126,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                     CircleAvatar(
                                       radius: 25,
                                       backgroundColor: bgColor.withOpacity(0.1),
-                                      child: Icon(
+                                      child: FaIcon(
                                         FontAwesomeIcons.phone,
                                         color: bgColor,
                                         size: 20,
@@ -271,7 +271,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                             ),
                                             child: Row(
                                               children: [
-                                                Icon(FontAwesomeIcons.whatsapp,
+                                                FaIcon(FontAwesomeIcons.whatsapp,
                                                     color: Colors.green),
                                                 SizedBox(width: 15),
                                                 Expanded(
@@ -441,7 +441,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
   }
 
   Widget _buildContactCard({
-    required IconData icon,
+    required dynamic icon,
     required String title,
     required String content,
     required VoidCallback onTap,
@@ -474,7 +474,11 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: iconBackgroundColor.withOpacity(0.1),
-                  child: Icon(
+                  child: icon is IconData ? Icon(
+                    icon,
+                    color: iconBackgroundColor,
+                    size: 20,
+                  ) : FaIcon(
                     icon,
                     color: iconBackgroundColor,
                     size: 20,

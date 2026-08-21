@@ -165,7 +165,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   Widget _buildSocialButton({
-    required IconData icon,
+    required dynamic icon,
     required String label,
     required Color color,
     required VoidCallback onTap,
@@ -191,7 +191,7 @@ class _StoryWidgetState extends State<StoryWidget> {
                   ),
                 ],
               ),
-              child: Icon(icon, color: color),
+              child: icon is IconData ? Icon(icon, color: color) : FaIcon(icon, color: color),
             ),
             SizedBox(height: 8),
             Text(
