@@ -103,7 +103,7 @@ class MaroonGradientPainter extends CustomPainter {
       end: Alignment.bottomCenter,
       colors: [
         Colors.white,
-        Colors.white.withOpacity(0.95),
+        Colors.white.withValues(alpha: 0.95),
         Color(0xFFFAF6F6),
       ],
       stops: [0.0, 0.4, 1.0],
@@ -120,7 +120,7 @@ class MaroonGradientPainter extends CustomPainter {
     // Add subtle maroon dots
     final random = math.Random(animationValue.toInt() * 100);
     final dotPaint = Paint()
-      ..color = bgColor.withOpacity(0.1)
+      ..color = bgColor.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 40; i++) {
@@ -134,7 +134,7 @@ class MaroonGradientPainter extends CustomPainter {
   void _drawMaroonPatterns(Canvas canvas, Size size) {
     // Create elegant maroon patterns
     final maroonPaint = Paint()
-      ..color = bgColor.withOpacity(0.06)
+      ..color = bgColor.withValues(alpha: 0.06)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
@@ -151,7 +151,7 @@ class MaroonGradientPainter extends CustomPainter {
     // Add subtle maroon gradient accents
     final accentPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = bgColor.withOpacity(0.03);
+      ..color = bgColor.withValues(alpha: 0.03);
 
     // Draw curved accents at the top
     Path accentPath = Path();
@@ -194,7 +194,7 @@ class MaroonGradientPainter extends CustomPainter {
       Canvas canvas, Offset center, double size, Paint paint) {
     // Draw a traditional Indian jewelry inspired pattern
     final maroonFillPaint = Paint()
-      ..color = bgColor.withOpacity(0.04)
+      ..color = bgColor.withValues(alpha: 0.04)
       ..style = PaintingStyle.fill;
 
     // Draw main design
@@ -249,7 +249,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(70, 70),
             painter: MaroonCornerPainter(
-              color: bgColor.withOpacity(0.15),
+              color: bgColor.withValues(alpha: 0.15),
             ),
           ),
         ),
@@ -262,7 +262,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
             child: CustomPaint(
               size: Size(70, 70),
               painter: MaroonCornerPainter(
-                color: bgColor.withOpacity(0.15),
+                color: bgColor.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -276,7 +276,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
             child: CustomPaint(
               size: Size(70, 70),
               painter: MaroonCornerPainter(
-                color: bgColor.withOpacity(0.15),
+                color: bgColor.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -290,7 +290,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
             child: CustomPaint(
               size: Size(70, 70),
               painter: MaroonCornerPainter(
-                color: bgColor.withOpacity(0.15),
+                color: bgColor.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -303,7 +303,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(30, 150),
             painter: MaroonBorderPainter(
-              color: bgColor.withOpacity(0.1),
+              color: bgColor.withValues(alpha: 0.1),
             ),
           ),
         ),
@@ -314,7 +314,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(30, 150),
             painter: MaroonBorderPainter(
-              color: bgColor.withOpacity(0.1),
+              color: bgColor.withValues(alpha: 0.1),
               isLeftSide: true,
             ),
           ),
@@ -328,7 +328,7 @@ class MaroonDecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(double.infinity, 40),
             painter: MaroonPatternPainter(
-              color: bgColor.withOpacity(0.08),
+              color: bgColor.withValues(alpha: 0.08),
             ),
           ),
         ),
@@ -421,7 +421,7 @@ class MaroonBorderPainter extends CustomPainter {
 
     final fillPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = color.withOpacity(0.3);
+      ..color = color.withValues(alpha: 0.3);
 
     // Draw an elegant border design
     Path path = Path();
@@ -517,7 +517,7 @@ class MaroonPatternPainter extends CustomPainter {
     // Draw dots at key points for added style
     final dotPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = color.withOpacity(0.5);
+      ..color = color.withValues(alpha: 0.5);
 
     for (int i = 0; i < motifCount; i++) {
       double x = i * motifWidth + motifWidth / 2;

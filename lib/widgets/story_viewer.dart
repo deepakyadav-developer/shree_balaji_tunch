@@ -212,7 +212,7 @@ class _StoryViewerState extends State<StoryViewer> {
                       margin: EdgeInsets.symmetric(horizontal: 2),
                       color: entry.key == currentIndex
                           ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                          : Colors.white.withValues(alpha: 0.5),
                     ),
                   );
                 }).toList(),

@@ -18,6 +18,7 @@ import 'package:shreebalaji_tounch/controllers/language_controller.dart';
 import 'package:shreebalaji_tounch/config/bindings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'firebase_options.dart';
 import 'constant/APP_INFO.dart';
 
 var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -25,7 +26,9 @@ FlutterTts flutterTts = FlutterTts();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Initialize notifications
   await createNotificationChannel();
@@ -142,7 +145,9 @@ void setFirebase() async {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   if (a.Platform.isIOS) {
-    _firebaseMessaging.subscribeToTopic('ios');
+    _firebaseMessaging.subscribeToTopic('ios').catchError((e) {
+      print('Failed to subscribe to ios topic: $e');
+    });
   } else {
     _firebaseMessaging.subscribeToTopic('android');
   }
@@ -161,6 +166,8 @@ void setFirebase() async {
 
   _firebaseMessaging.getToken().then((String? token) {
     print("Push Messaging token: $token");
+  }).catchError((e) {
+    print("Failed to get token: $e");
   });
 }
 

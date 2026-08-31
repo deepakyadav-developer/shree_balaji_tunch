@@ -294,7 +294,6 @@ class _RatePageState extends State<RatePage>
           child: Column(
             children: [
               Container(
-                height: 110,
                 color: app_info.bgColor,
                 child: Column(
                   children: [

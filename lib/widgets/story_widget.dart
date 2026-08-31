@@ -57,8 +57,10 @@ class _StoryWidgetState extends State<StoryWidget> {
       // Show social buttons when no stories are available
       return Container(
         height: 100,
+        alignment: Alignment.center,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildSocialButton(
               icon: FontAwesomeIcons.facebook,
@@ -92,7 +94,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
 
     return Container(
-      height: 800,
+      height: 100,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: stories.length,
@@ -185,13 +187,16 @@ class _StoryWidgetState extends State<StoryWidget> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.grey.withValues(alpha: 0.3),
                     spreadRadius: 1,
                     blurRadius: 2,
                   ),
                 ],
               ),
-              child: icon is IconData ? Icon(icon, color: color) : FaIcon(icon, color: color),
+              alignment: Alignment.center,
+              child: icon is IconData
+                  ? Icon(icon, color: color)
+                  : FaIcon(icon, color: color),
             ),
             SizedBox(height: 8),
             Text(
@@ -369,7 +374,7 @@ class _StoryViewPageState extends State<StoryViewPage> {
                           margin: EdgeInsets.symmetric(horizontal: 2),
                           color: entry.key == _currentIndex
                               ? Colors.white
-                              : Colors.white.withOpacity(0.5),
+                              : Colors.white.withValues(alpha: 0.5),
                         ),
                       );
                     }).toList(),

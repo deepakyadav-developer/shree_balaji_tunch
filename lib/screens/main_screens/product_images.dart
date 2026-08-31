@@ -73,13 +73,13 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.5),
+        backgroundColor: Colors.black.withValues(alpha: 0.5),
         elevation: 0,
         leading: IconButton(
           icon: Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -103,7 +103,7 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
               icon: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -122,7 +122,7 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
                   Icon(
                     Icons.image_not_supported_outlined,
                     size: 80,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -190,7 +190,7 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     margin: EdgeInsets.symmetric(horizontal: 80),
@@ -237,7 +237,7 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
           width: 100,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.7),
+            color: Colors.black.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(16),
           ),
           child: CircularProgressIndicator(

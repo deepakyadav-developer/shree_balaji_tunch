@@ -71,7 +71,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   getUserId() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      id = pref.getString('mobile_number');
+      id = pref.getString('mobile');
     });
     print('is null -------${id == null}');
     print('ID -------$id');
@@ -91,7 +91,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   getData() async {
     try {
       SharedPreferences sp = await SharedPreferences.getInstance();
-      mobile = sp.getString("mobile_number") ?? "";
+      mobile = sp.getString("mobile") ?? "";
     } catch (e) {
       print(e);
     }
@@ -618,14 +618,17 @@ class _MyBottomBarState extends State<MyBottomBar> {
                                       actions: <Widget>[
                                         TextButton(
                                           child: Text('yes'.tr),
-                                          onPressed: () {
+                                          onPressed: () async {
                                             if (id != null) {
-                                              FirebaseFirestore.instance
+                                              final querySnapshot = await FirebaseFirestore.instance
                                                   .collection('register')
-                                                  .doc(id)
-                                                  .delete();
+                                                  .where('mobile', isEqualTo: id)
+                                                  .get();
+                                              for (var doc in querySnapshot.docs) {
+                                                await doc.reference.delete();
+                                              }
                                             }
-                                            pref.clear();
+                                            await pref.clear();
                                             Navigator.of(context).pop();
                                             Get.offAll(() => MyRegister());
                                             Fluttertoast.showToast(
