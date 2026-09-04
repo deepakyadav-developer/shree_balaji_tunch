@@ -17,7 +17,7 @@ import 'package:shreebalaji_tounch/config/translations.dart';
 import 'package:shreebalaji_tounch/controllers/language_controller.dart';
 import 'package:shreebalaji_tounch/config/bindings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'firebase_options.dart';
 import 'constant/APP_INFO.dart';
 
 var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -25,24 +25,64 @@ FlutterTts flutterTts = FlutterTts();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
-  // Initialize notifications
-  await createNotificationChannel();
-  setFirebase();
-  LocalNotificationService.initialize();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('✓ Firebase initialized successfully');
+  } catch (e) {
+    print('✗ Error initializing Firebase: $e');
+  }
 
-  // Initialize Firebase messaging service
-  await FirebaseMessagingService().initialize();
+  try {
+    // Initialize notifications
+    await createNotificationChannel();
+    print('✓ Notification channel created successfully');
+  } catch (e) {
+    print('✗ Error creating notification channel: $e');
+  }
 
-  // Listen for foreground messages
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    showNotification(message.data);
-    LocalNotificationService.createanddisplaynotification(message);
-  });
+  try {
+    await setFirebase();
+    print('✓ Firebase messaging initialized successfully');
+  } catch (e) {
+    print('✗ Error setting up Firebase messaging: $e');
+  }
 
-  // Initialize language controller
-  Get.put(LanguageController());
+  try {
+    LocalNotificationService.initialize();
+    print('✓ Local notification service initialized successfully');
+  } catch (e) {
+    print('✗ Error initializing local notification service: $e');
+  }
+
+  try {
+    // Initialize Firebase messaging service
+    await FirebaseMessagingService().initialize();
+    print('✓ Firebase messaging service initialized successfully');
+  } catch (e) {
+    print('✗ Error initializing Firebase messaging service: $e');
+  }
+
+  try {
+    // Listen for foreground messages
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      showNotification(message.data);
+      LocalNotificationService.createanddisplaynotification(message);
+    });
+    print('✓ Message listener set up successfully');
+  } catch (e) {
+    print('✗ Error setting up message listener: $e');
+  }
+
+  try {
+    // Initialize language controller
+    Get.put(LanguageController()); 
+    print('✓ Language controller initialized');
+  } catch (e) {
+    print('✗ Error initializing language controller: $e');
+  }
 
   // Ensure language is loaded before app starts
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -61,6 +101,7 @@ void main() async {
       initialLocale = Locale('en', 'US');
   }
 
+  print('✓ Starting app with locale: $initialLocale');
   runApp(MyApp(initialLocale: initialLocale));
 }
 
@@ -121,47 +162,51 @@ createNotificationChannel() async {
   }
 }
 
-void setFirebase() async {
-  var initializationSettingsAndroid = const AndroidInitializationSettings(
-    'app_icon',
-  );
+Future<void> setFirebase() async {
+  try {
+    var initializationSettingsAndroid = const AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
-  var initializationSettingsIOS = const DarwinInitializationSettings();
+    var initializationSettingsIOS = const DarwinInitializationSettings();
 
-  var initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsIOS,
-  );
+    var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
 
-  flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse response) {
-      onSelect(response.payload);
-    },
-  );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        onSelect(response.payload);
+      },
+    );
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  if (a.Platform.isIOS) {
-    _firebaseMessaging.subscribeToTopic('ios');
-  } else {
-    _firebaseMessaging.subscribeToTopic('android');
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    if (a.Platform.isIOS) {
+      _firebaseMessaging.subscribeToTopic('ios');
+    } else {
+      _firebaseMessaging.subscribeToTopic('android');
+    }
+    if (!a.Platform.isIOS) {
+      FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+    }
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      showNotification(message.data);
+    });
+    await _firebaseMessaging.requestPermission(
+      sound: true,
+      badge: true,
+      alert: true,
+      provisional: false,
+    );
+
+    _firebaseMessaging.getToken().then((String? token) {
+      print("Push Messaging token: $token");
+    });
+  } catch (e) {
+    print('Error initializing Firebase: $e');
   }
-  if (!a.Platform.isIOS) {
-    FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-  }
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    showNotification(message.data);
-  });
-  await _firebaseMessaging.requestPermission(
-    sound: true,
-    badge: true,
-    alert: true,
-    provisional: false,
-  );
-
-  _firebaseMessaging.getToken().then((String? token) {
-    print("Push Messaging token: $token");
-  });
 }
 
 Future<void> showNotification(Map<String, dynamic> message) async {

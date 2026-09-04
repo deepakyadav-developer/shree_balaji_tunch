@@ -191,7 +191,9 @@ class _StoryWidgetState extends State<StoryWidget> {
                   ),
                 ],
               ),
-              child: icon is IconData ? Icon(icon, color: color) : FaIcon(icon, color: color),
+              child: Center(
+                child: icon is IconData ? Icon(icon, color: color) : FaIcon(icon, color: color),
+              ),
             ),
             SizedBox(height: 8),
             Text(

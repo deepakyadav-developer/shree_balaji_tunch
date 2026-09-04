@@ -50,6 +50,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Debug signing is automatic in Flutter
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")

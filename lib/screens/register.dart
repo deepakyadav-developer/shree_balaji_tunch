@@ -326,73 +326,102 @@ class _MyRegisterState extends State<MyRegister> {
     } else {
       _showDialogLoading();
 
-      var uuid = const Uuid();
-      var useId = uuid.v4();
-      FirebaseFirestore.instance
-          .collection('register')
-          .where('mobile', isEqualTo: mobileController.text)
-          .get()
-          .then((QuerySnapshot snapshot) {
+      try {
+        var uuid = const Uuid();
+        var useId = uuid.v4();
+        
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('register')
+            .where('mobile', isEqualTo: mobileController.text)
+            .get();
+
         if (snapshot.docs.isEmpty) {
-          FirebaseFirestore.instance.collection('register').add({
+          // New user registration
+          await FirebaseFirestore.instance.collection('register').add({
             "name": nameController.text,
             "city": addressController.text,
             "mobile": mobileController.text,
             "userId": useId,
             "firmName": firmController.text,
             'enteredDate': Timestamp.now(),
-          }).whenComplete(() async {
-            SharedPreferences sp = await SharedPreferences.getInstance();
-            sp.setString("name", nameController.text);
-            sp.setString("city", addressController.text);
-            sp.setString("userId", useId);
-            sp.setString("mobile", mobileController.text);
-            sp.setString("firmName", firmController.text);
-            Get.snackbar('Success', 'Login Successfull',
-                backgroundColor: Colors.white);
-            FirebaseFirestore.instance
-                .collection('registrationcount')
-                .get()
-                .then((QuerySnapshot snapshot) {
-              if (snapshot.docs.isEmpty) {
-                FirebaseFirestore.instance
-                    .collection('registrationcount')
-                    .add({'count': 1});
-              } else {
-                for (var element in snapshot.docs) {
-                  FirebaseFirestore.instance
-                      .collection('registrationcount')
-                      .doc(element.id)
-                      .update({'count': element.get('count') + 1});
-                }
-              }
-            });
-            _notifyAdmin('/topics/visiondgtech');
-            Get.offAll(() => MyBottomBar());
           });
+
+          SharedPreferences sp = await SharedPreferences.getInstance();
+          sp.setString("name", nameController.text);
+          sp.setString("city", addressController.text);
+          sp.setString("userId", useId);
+          sp.setString("mobile", mobileController.text);
+          sp.setString("firmName", firmController.text);
+
+          // Update registration count
+          QuerySnapshot countSnapshot = await FirebaseFirestore.instance
+              .collection('registrationcount')
+              .get();
+
+          if (countSnapshot.docs.isEmpty) {
+            await FirebaseFirestore.instance
+                .collection('registrationcount')
+                .add({'count': 1});
+          } else {
+            for (var element in countSnapshot.docs) {
+              await FirebaseFirestore.instance
+                  .collection('registrationcount')
+                  .doc(element.id)
+                  .update({'count': element.get('count') + 1});
+            }
+          }
+
+          // Notify admin (non-blocking)
+          _notifyAdmin('/topics/visiondgtech');
+
+          // Close loading dialog
+          Get.back();
+
+          Get.snackbar('Success', 'Registration Successful',
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+
+          // Navigate to home
+          Get.offAll(() => MyBottomBar());
         } else {
-          snapshot.docs.first.reference.update({
+          // Existing user - update details
+          await snapshot.docs.first.reference.update({
             "name": nameController.text,
-            "company": firmController.text,
+            "firmName": firmController.text,
             "mobile": mobileController.text,
             "userId": useId,
             "city": addressController.text,
-          }).whenComplete(() async {
-            // playSound();
-            SharedPreferences sp = await SharedPreferences.getInstance();
-            sp.setString("name", nameController.text);
-            sp.setString("userId", useId);
-            sp.setString("company", firmController.text);
-            sp.setString("mobile", mobileController.text);
-
-            sp.setString("city", addressController.text);
-            Get.snackbar('Success', 'Login successful',
-                backgroundColor: Colors.white);
-            Get.offAll(() => MyBottomBar());
-            _notifyAdmin2('/topics/visiondgtech');
           });
+
+          SharedPreferences sp = await SharedPreferences.getInstance();
+          sp.setString("name", nameController.text);
+          sp.setString("userId", useId);
+          sp.setString("firmName", firmController.text);
+          sp.setString("mobile", mobileController.text);
+          sp.setString("city", addressController.text);
+
+          // Notify admin (non-blocking)
+          _notifyAdmin2('/topics/visiondgtech');
+
+          // Close loading dialog
+          Get.back();
+
+          Get.snackbar('Success', 'Login successful',
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+
+          // Navigate to home
+          Get.offAll(() => MyBottomBar());
         }
-      });
+      } catch (e) {
+        // Close loading dialog on error
+        Get.back();
+        
+        print('Registration error: $e');
+        Get.snackbar('Error', 'Registration failed. Please try again.',
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+      }
     }
   }
 

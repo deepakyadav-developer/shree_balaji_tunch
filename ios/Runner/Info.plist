@@ -55,8 +55,6 @@
 	<string>This app requires microphone access for audio features.</string>
 	<key>NSNotificationUsageDescription</key>
 	<string>This app would like to send you notifications for important updates and messages.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized content to you.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
