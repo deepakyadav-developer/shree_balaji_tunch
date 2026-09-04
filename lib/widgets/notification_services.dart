@@ -26,13 +26,19 @@ class FirebaseMessagingService {
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
 
     // Get the FCM token
-    String? token = await _firebaseMessaging.getToken();
+    try {
+      String? token = await _firebaseMessaging.getToken();
 
-    if (token != null) {
-      pref.setString('fcmToken', token);
-    }
-    if (kDebugMode) {
-      print('this is fcmtoken ===================> $token');
+      if (token != null) {
+        pref.setString('fcmToken', token);
+      }
+      if (kDebugMode) {
+        print('this is fcmtoken ===================> $token');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting FCM token: $e');
+      }
     }
   }
 

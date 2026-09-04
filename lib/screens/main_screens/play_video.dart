@@ -104,7 +104,7 @@ class _ShortsPlayerState extends State<ShortsPlayer> {
           icon: Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: bgColor.withOpacity(0.7),
+              color: bgColor.withValues(alpha: 0.7),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -157,7 +157,7 @@ class _ShortsPlayerState extends State<ShortsPlayer> {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Colors.black.withOpacity(0.8),
+                      Colors.black.withValues(alpha: 0.8),
                       Colors.transparent,
                     ],
                   ),
@@ -206,7 +206,7 @@ class _ShortsPlayerState extends State<ShortsPlayer> {
                           icon: Container(
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: bgColor.withOpacity(0.7),
+                              color: bgColor.withValues(alpha: 0.7),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -229,7 +229,7 @@ class _ShortsPlayerState extends State<ShortsPlayer> {
               child: Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: CircularProgressIndicator(

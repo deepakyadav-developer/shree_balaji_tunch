@@ -11,10 +11,34 @@ class ShopNow extends StatefulWidget {
 
 class _ShopNowState extends State<ShopNow> with AutomaticKeepAliveClientMixin {
   bool isLoading = true;
+  late final WebViewController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              isLoading = true;
+            });
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (error) {
+            setState(() {
+              isLoading = false;
+            });
+            signupMessages("Please check your Internet connection");
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse("https://shreebalajistore.com/"));
   }
 
   @override
@@ -24,29 +48,7 @@ class _ShopNowState extends State<ShopNow> with AutomaticKeepAliveClientMixin {
       body: Stack(
         children: [
           WebViewWidget(
-            controller: WebViewController()
-              ..setJavaScriptMode(JavaScriptMode.unrestricted)
-              ..setNavigationDelegate(
-                NavigationDelegate(
-                  onPageStarted: (String url) {
-                    setState(() {
-                      isLoading = true;
-                    });
-                  },
-                  onPageFinished: (String url) {
-                    setState(() {
-                      isLoading = false;
-                    });
-                  },
-                  onWebResourceError: (error) {
-                    setState(() {
-                      isLoading = false;
-                    });
-                    signupMessages("Please check your Internet connection");
-                  },
-                ),
-              )
-              ..loadRequest(Uri.parse("https://shreebalajistore.com/")),
+            controller: _controller,
           ),
           if (isLoading)
             Center(

@@ -3,7 +3,7 @@ import Flutter
 import UserNotifications
 import AVFoundation
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,

@@ -323,7 +323,8 @@ class _BankState extends State<Bank> with AutomaticKeepAliveClientMixin {
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors.black
-                                                            .withOpacity(0.08),
+                                                            .withValues(
+                                                                alpha: 0.08),
                                                         spreadRadius: 1,
                                                         blurRadius: 15,
                                                         offset: Offset(0, 8),

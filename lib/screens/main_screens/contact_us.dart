@@ -112,7 +112,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                     spreadRadius: 1,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -125,7 +125,8 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                   children: [
                                     CircleAvatar(
                                       radius: 25,
-                                      backgroundColor: bgColor.withOpacity(0.1),
+                                      backgroundColor:
+                                          bgColor.withValues(alpha: 0.1),
                                       child: FaIcon(
                                         FontAwesomeIcons.phone,
                                         color: bgColor,
@@ -158,7 +159,8 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 10, horizontal: 15),
                                             decoration: BoxDecoration(
-                                              color: bgColor.withOpacity(0.05),
+                                              color: bgColor.withValues(
+                                                  alpha: 0.05),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
@@ -217,7 +219,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                     spreadRadius: 1,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -231,7 +233,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                     CircleAvatar(
                                       radius: 25,
                                       backgroundColor:
-                                          Colors.green.withOpacity(0.1),
+                                          Colors.green.withValues(alpha: 0.1),
                                       child: FaIcon(
                                         FontAwesomeIcons.whatsapp,
                                         color: Colors.green,
@@ -265,13 +267,14 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                                 vertical: 10, horizontal: 15),
                                             decoration: BoxDecoration(
                                               color: Colors.green
-                                                  .withOpacity(0.05),
+                                                  .withValues(alpha: 0.05),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: Row(
                                               children: [
-                                                FaIcon(FontAwesomeIcons.whatsapp,
+                                                FaIcon(
+                                                    FontAwesomeIcons.whatsapp,
                                                     color: Colors.green),
                                                 SizedBox(width: 15),
                                                 Expanded(
@@ -324,7 +327,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                     spreadRadius: 1,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -455,7 +458,7 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: Offset(0, 3),
@@ -473,16 +476,18 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
               children: [
                 CircleAvatar(
                   radius: 25,
-                  backgroundColor: iconBackgroundColor.withOpacity(0.1),
-                  child: icon is IconData ? Icon(
-                    icon,
-                    color: iconBackgroundColor,
-                    size: 20,
-                  ) : FaIcon(
-                    icon,
-                    color: iconBackgroundColor,
-                    size: 20,
-                  ),
+                  backgroundColor: iconBackgroundColor.withValues(alpha: 0.1),
+                  child: icon is IconData
+                      ? Icon(
+                          icon,
+                          color: iconBackgroundColor,
+                          size: 20,
+                        )
+                      : FaIcon(
+                          icon,
+                          color: iconBackgroundColor,
+                          size: 20,
+                        ),
                 ),
                 SizedBox(height: 15),
                 Text(

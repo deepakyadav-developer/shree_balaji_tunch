@@ -106,9 +106,9 @@ class DiagonalGradientPainter extends CustomPainter {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        bgColor.withOpacity(0.05),
-        Color(0xFFFFF9E3).withOpacity(0.3),
-        goldColor.withOpacity(0.1),
+        bgColor.withValues(alpha: 0.05),
+        Color(0xFFFFF9E3).withValues(alpha: 0.3),
+        goldColor.withValues(alpha: 0.1),
       ],
       stops: [0.0, 0.5, 1.0],
       transform: GradientRotation(math.pi * 2 * animationValue * 0.1),
@@ -119,7 +119,7 @@ class DiagonalGradientPainter extends CustomPainter {
 
     // Add diagonal patterns
     final patternPaint = Paint()
-      ..color = bgColor.withOpacity(0.03)
+      ..color = bgColor.withValues(alpha: 0.03)
       ..style = PaintingStyle.fill;
 
     // Create diagonal pattern with subtle animation
@@ -143,7 +143,7 @@ class DiagonalGradientPainter extends CustomPainter {
     // Add sparkling gold dots
     final random = math.Random(animationValue.toInt() * 100);
     final dotPaint = Paint()
-      ..color = goldColor.withOpacity(0.1)
+      ..color = goldColor.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 50; i++) {
@@ -156,7 +156,7 @@ class DiagonalGradientPainter extends CustomPainter {
 
   void _drawGoldPattern(Canvas canvas, Size size) {
     final goldPatternPaint = Paint()
-      ..color = goldColor.withOpacity(0.05)
+      ..color = goldColor.withValues(alpha: 0.05)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -272,7 +272,7 @@ class ShimmerPatternPainter extends CustomPainter {
     // Draw shimmer waves
     final shimmerPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = goldColor.withOpacity(0.05);
+      ..color = goldColor.withValues(alpha: 0.05);
 
     for (int i = 0; i < 5; i++) {
       double wavePhase = (animationValue + i * 0.2) % 1.0;
@@ -300,7 +300,7 @@ class ShimmerPatternPainter extends CustomPainter {
 
     // Draw decorative patterns
     final patternPaint = Paint()
-      ..color = bgColor.withOpacity(0.02)
+      ..color = bgColor.withValues(alpha: 0.02)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 20; i++) {
@@ -343,7 +343,7 @@ class DecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(60, 60),
             painter: CornerFlourishPainter(
-              color: goldColor.withOpacity(0.15),
+              color: goldColor.withValues(alpha: 0.15),
             ),
           ),
         ),
@@ -356,7 +356,7 @@ class DecorativeOverlay extends StatelessWidget {
             child: CustomPaint(
               size: Size(60, 60),
               painter: CornerFlourishPainter(
-                color: goldColor.withOpacity(0.15),
+                color: goldColor.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -370,7 +370,7 @@ class DecorativeOverlay extends StatelessWidget {
             child: CustomPaint(
               size: Size(60, 60),
               painter: CornerFlourishPainter(
-                color: goldColor.withOpacity(0.15),
+                color: goldColor.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -384,7 +384,7 @@ class DecorativeOverlay extends StatelessWidget {
             child: CustomPaint(
               size: Size(60, 60),
               painter: CornerFlourishPainter(
-                color: goldColor.withOpacity(0.15),
+                color: goldColor.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -397,7 +397,7 @@ class DecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(20, 20),
             painter: DiamondPainter(
-              color: goldColor.withOpacity(0.2),
+              color: goldColor.withValues(alpha: 0.2),
             ),
           ),
         ),
@@ -408,7 +408,7 @@ class DecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(15, 15),
             painter: DiamondPainter(
-              color: goldColor.withOpacity(0.15),
+              color: goldColor.withValues(alpha: 0.15),
             ),
           ),
         ),
@@ -419,7 +419,7 @@ class DecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(25, 25),
             painter: DiamondPainter(
-              color: goldColor.withOpacity(0.15),
+              color: goldColor.withValues(alpha: 0.15),
             ),
           ),
         ),
@@ -432,7 +432,7 @@ class DecorativeOverlay extends StatelessWidget {
           child: CustomPaint(
             size: Size(double.infinity, 30),
             painter: ChainPainter(
-              color: goldColor.withOpacity(0.1),
+              color: goldColor.withValues(alpha: 0.1),
             ),
           ),
         ),
@@ -507,7 +507,7 @@ class DiamondPainter extends CustomPainter {
 
     final fillPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = color.withOpacity(0.1);
+      ..color = color.withValues(alpha: 0.1);
 
     // Draw diamond shape
     final path = Path();

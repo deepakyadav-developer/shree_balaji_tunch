@@ -17,6 +17,7 @@ import 'package:shreebalaji_tounch/config/translations.dart';
 import 'package:shreebalaji_tounch/controllers/language_controller.dart';
 import 'package:shreebalaji_tounch/config/bindings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'firebase_options.dart';
 import 'constant/APP_INFO.dart';
 
@@ -25,6 +26,7 @@ FlutterTts flutterTts = FlutterTts();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
 
   try {
     await Firebase.initializeApp(
@@ -184,7 +186,9 @@ Future<void> setFirebase() async {
 
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     if (a.Platform.isIOS) {
-      _firebaseMessaging.subscribeToTopic('ios');
+      _firebaseMessaging.subscribeToTopic('ios').catchError((e) {
+        print('Failed to subscribe to ios topic: $e');
+      });
     } else {
       _firebaseMessaging.subscribeToTopic('android');
     }
@@ -203,6 +207,8 @@ Future<void> setFirebase() async {
 
     _firebaseMessaging.getToken().then((String? token) {
       print("Push Messaging token: $token");
+    }).catchError((e) {
+      print("Failed to get token: $e");
     });
   } catch (e) {
     print('Error initializing Firebase: $e');
