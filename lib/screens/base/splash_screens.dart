@@ -486,7 +486,7 @@ class SplashScreenState extends State<SplashScreen>
 
   _getData() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    if (sp.getString("mobile") == null) {
+    if (sp.getString("mobile") == null && sp.getBool("isGuest") != true) {
       Get.offAll(() => MyRegister());
     } else {
       Get.offAll(() => MyBottomBar());

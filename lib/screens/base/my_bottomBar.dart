@@ -63,21 +63,60 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }
 
   void _onItemTapped(int index) {
+    if (isGuest && (index == 1 || index == 4)) {
+      _checkGuestAndPrompt(context);
+      return;
+    }
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  bool _checkGuestAndPrompt(BuildContext context) {
+    if (isGuest) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Text("Guest Mode", style: TextStyle(fontWeight: FontWeight.bold, color: app_info.bgColor)),
+          content: Text("Please Login or Register to access account-based features.", style: TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel", style: TextStyle(color: Colors.grey[700])),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                SharedPreferences sp = await SharedPreferences.getInstance();
+                await sp.clear();
+                Get.offAll(() => MyRegister());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: app_info.bgColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+              ),
+              child: Text("Login / Register", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      );
+      return true;
+    }
+    return false;
   }
 
   getUserId() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       id = pref.getString('mobile');
+      isGuest = pref.getBool('isGuest') ?? false;
     });
     print('is null -------${id == null}');
     print('ID -------$id');
   }
 
   late String? id;
+  bool isGuest = false;
   final PageController _pageController = PageController();
   String mobile = "";
   final List<Widget> _pages = [
@@ -437,7 +476,12 @@ class _MyBottomBarState extends State<MyBottomBar> {
                     subtitle: 'Browse our collection',
                     iconGradient: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                     onTap: () {
-                      Get.to(() => ShopNow());
+                      Navigator.pop(context);
+                      if (isGuest) {
+                        _checkGuestAndPrompt(context);
+                      } else {
+                        Get.to(() => ShopNow());
+                      }
                     },
                   ),
                   SizedBox(height: 10),
@@ -590,7 +634,15 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
                       // Account Management Options
                       id == null || id == ''
-                          ? SizedBox()
+                          ? _buildDarkDrawerItem(
+                              icon: Icons.login_rounded,
+                              title: 'login_register'.tr,
+                              iconColor: Colors.green,
+                              onTap: () {
+                                Navigator.pop(context);
+                                Get.to(() => MyRegister());
+                              },
+                            )
                           : _buildDarkDrawerItem(
                               icon: Icons.delete_outline_rounded,
                               title: 'deactivate_account'.tr,
@@ -659,6 +711,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                                     await SharedPreferences.getInstance();
                                 sp.setString('mobile', '');
                                 sp.setString('useId', '');
+                                sp.setBool('isGuest', false);
                                 Get.offAll(() => MyRegister());
                               },
                             ),

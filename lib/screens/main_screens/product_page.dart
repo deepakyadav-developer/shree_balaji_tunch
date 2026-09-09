@@ -35,9 +35,18 @@ class _ProductPageState extends State<ProductPage> {
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection("gallery")
-              .where('category', isEqualTo: widget.id)
+              .where('category', isEqualTo: widget.categoryName)
               .snapshots(),
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Error loading images',
+                  style: TextStyle(color: app_info.bgColor, fontSize: 16),
+                ),
+              );
+            }
+
             if (!snapshot.hasData) {
               return Center(
                 child: Column(
@@ -185,6 +194,9 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
+                          var docData = snapshot.data!.docs[index].data() as Map<String, dynamic>?;
+                          var imageUrl = docData != null && docData.containsKey('url') ? docData['url'] ?? '' : '';
+                          
                           return GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(
@@ -209,9 +221,8 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      snapshot.data!.docs[index].get("url"),
+                                child: imageUrl.isNotEmpty ? CachedNetworkImage(
+                                  imageUrl: imageUrl,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) {
                                     return Container(
@@ -237,6 +248,11 @@ class _ProductPageState extends State<ProductPage> {
                                       ),
                                     );
                                   },
+                                ) : Container(
+                                  color: app_info.bgColor.withValues(alpha: 0.05),
+                                  child: Center(
+                                    child: Icon(Icons.image_not_supported, color: Colors.grey),
+                                  ),
                                 ),
                               ),
                             ),

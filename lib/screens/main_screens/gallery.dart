@@ -73,6 +73,15 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection("category").snapshots(),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error loading categories',
+                style: TextStyle(color: app_info.bgColor, fontSize: 16),
+              ),
+            );
+          }
+
           if (!snapshot.hasData) {
             return Center(
               child: Column(
@@ -127,10 +136,11 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                 childAspectRatio: 0.8,
               ),
               itemBuilder: (context, index) {
+                var docData = snapshot.data!.docs[index].data() as Map<String, dynamic>?;
                 return _buildCategoryCard(
                   snapshot.data!.docs[index].id,
-                  snapshot.data!.docs[index].get('categoryName'),
-                  snapshot.data!.docs[index].get("url"),
+                  docData != null && docData.containsKey('categoryName') ? docData['categoryName'] ?? 'Unnamed' : 'Unnamed',
+                  docData != null && docData.containsKey('url') ? docData['url'] ?? '' : '',
                 );
               },
             ),
@@ -238,6 +248,15 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
           .orderBy("updatedTime", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Error loading videos',
+              style: TextStyle(color: app_info.bgColor, fontSize: 16),
+            ),
+          );
+        }
+
         if (!snapshot.hasData) {
           return Center(
             child: Column(
@@ -285,8 +304,10 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
             physics: BouncingScrollPhysics(),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (BuildContext context, int index) {
-              var thumbnail = snapshot.data!.docs[index].get('thumbnail');
-              list.add(snapshot.data!.docs[index].get('url'));
+              var docData = snapshot.data!.docs[index].data() as Map<String, dynamic>?;
+              var thumbnail = docData != null && docData.containsKey('thumbnail') ? docData['thumbnail'] ?? '' : '';
+              var videoUrl = docData != null && docData.containsKey('url') ? docData['url'] ?? '' : '';
+              list.add(videoUrl);
 
               return Container(
                 margin: EdgeInsets.only(bottom: 16),
@@ -306,9 +327,11 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                     color: Colors.white,
                     child: InkWell(
                       onTap: () {
-                        Get.to(() => ShortsPlayer(
-                              url: snapshot.data!.docs[index].get('url'),
-                            ));
+                        if (videoUrl.isNotEmpty) {
+                          Get.to(() => ShortsPlayer(
+                                url: videoUrl,
+                              ));
+                        }
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

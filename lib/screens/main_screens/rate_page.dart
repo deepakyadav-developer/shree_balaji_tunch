@@ -373,7 +373,7 @@ class _RatePageState extends State<RatePage>
                             .collection("rate")
                             .snapshots(),
                         builder: (context, snapshot) {
-                          if (snapshot.hasData) {
+                          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty && snapshot.data!.docs.length >= 4) {
                             return Screenshot(
                               child: Column(
                                 children: [
@@ -828,7 +828,7 @@ class _RatePageState extends State<RatePage>
                   final QuerySnapshot galleryDocs = await FirebaseFirestore
                       .instance
                       .collection('gallery')
-                      .where('category', isEqualTo: categoryDoc.id)
+                      .where('category', isEqualTo: categoryName)
                       .get();
 
                   final urls = galleryDocs.docs

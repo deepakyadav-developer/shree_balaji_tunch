@@ -151,7 +151,33 @@ class _MyRegisterState extends State<MyRegister> {
                         SizedBox(height: isSmallScreen ? 35 : 45),
                         // Register button
                         _buildRegisterButton(isSmallScreen),
-                        SizedBox(height: isSmallScreen ? 25 : 35),
+                        SizedBox(height: isSmallScreen ? 15 : 20),
+                        // Continue as Guest option
+                        Center(
+                          child: TextButton(
+                            onPressed: () async {
+                              SharedPreferences sp = await SharedPreferences.getInstance();
+                              sp.setBool("isGuest", true);
+                              Get.offAll(() => MyBottomBar());
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                            ),
+                            child: Text(
+                              'Continue as Guest',
+                              style: TextStyle(
+                                color: accentColor,
+                                fontSize: isSmallScreen ? 15 : 17,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 10 : 15),
                         // Sign in option
                         Center(
                           child: TextButton(

@@ -25,6 +25,7 @@ class AppTranslations extends Translations {
           'bhojpuri': 'Bhojpuri',
           'powered_by': 'Powered by: Vision DG Tech',
           'settings': 'Settings',
+          'login_register': 'Login / Register',
         },
         'hi_IN': {
           'contact_us': 'संपर्क करें',
@@ -47,6 +48,7 @@ class AppTranslations extends Translations {
           'bhojpuri': 'भोजपुरी',
           'powered_by': 'द्वारा संचालित: Vision DG Tech',
           'settings': 'सेटिंग्स',
+          'login_register': 'लॉगिन / रजिस्टर',
         },
         'bho_IN': {
           'contact_us': 'संपर्क करीं',
@@ -69,6 +71,7 @@ class AppTranslations extends Translations {
           'bhojpuri': 'भोजपुरी',
           'powered_by': 'द्वारा संचालित: Vision DG Tech',
           'settings': 'सेटिंग्स',
+          'login_register': 'लॉगिन / रजिस्टर',
         },
       };
 }

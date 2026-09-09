@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import '../register.dart';
 
 import '../../constant/APP_INFO.dart';
 
@@ -393,7 +396,37 @@ class _ContactUs_ScreenState extends State<ContactUs_Screen> {
                                       ),
                                       SizedBox(height: 25),
                                       ElevatedButton(
-                                        onPressed: () {
+                                        onPressed: () async {
+                                          SharedPreferences sp = await SharedPreferences.getInstance();
+                                          bool isGuest = sp.getBool("isGuest") ?? false;
+                                          if (isGuest) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                                title: Text("Guest Mode", style: TextStyle(fontWeight: FontWeight.bold, color: bgColor)),
+                                                content: Text("Please Login or Register to send a message.", style: TextStyle(fontSize: 16)),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pop(context),
+                                                    child: Text("Cancel", style: TextStyle(color: Colors.grey[700])),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () async {
+                                                      await sp.clear();
+                                                      Get.offAll(() => MyRegister());
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: bgColor,
+                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
+                                                    ),
+                                                    child: Text("Login / Register", style: TextStyle(color: Colors.white)),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            return;
+                                          }
                                           if (_formKey.currentState!
                                               .validate()) {
                                             // Process data
