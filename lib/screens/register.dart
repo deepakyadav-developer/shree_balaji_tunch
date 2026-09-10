@@ -156,7 +156,8 @@ class _MyRegisterState extends State<MyRegister> {
                         Center(
                           child: TextButton(
                             onPressed: () async {
-                              SharedPreferences sp = await SharedPreferences.getInstance();
+                              SharedPreferences sp =
+                                  await SharedPreferences.getInstance();
                               sp.setBool("isGuest", true);
                               Get.offAll(() => MyBottomBar());
                             },
@@ -355,7 +356,7 @@ class _MyRegisterState extends State<MyRegister> {
       try {
         var uuid = const Uuid();
         var useId = uuid.v4();
-        
+
         QuerySnapshot snapshot = await FirebaseFirestore.instance
             .collection('register')
             .where('mobile', isEqualTo: mobileController.text)
@@ -404,8 +405,7 @@ class _MyRegisterState extends State<MyRegister> {
           Get.back();
 
           Get.snackbar('Success', 'Registration Successful',
-              backgroundColor: Colors.green,
-              colorText: Colors.white);
+              backgroundColor: Colors.green, colorText: Colors.white);
 
           // Navigate to home
           Get.offAll(() => MyBottomBar());
@@ -433,8 +433,7 @@ class _MyRegisterState extends State<MyRegister> {
           Get.back();
 
           Get.snackbar('Success', 'Login successful',
-              backgroundColor: Colors.green,
-              colorText: Colors.white);
+              backgroundColor: Colors.green, colorText: Colors.white);
 
           // Navigate to home
           Get.offAll(() => MyBottomBar());
@@ -442,11 +441,9 @@ class _MyRegisterState extends State<MyRegister> {
       } catch (e) {
         // Close loading dialog on error
         Get.back();
-        
-        print('Registration error: $e');
+
         Get.snackbar('Error', 'Registration failed. Please try again.',
-            backgroundColor: Colors.red,
-            colorText: Colors.white);
+            backgroundColor: Colors.red, colorText: Colors.white);
       }
     }
   }
@@ -493,15 +490,9 @@ class _MyRegisterState extends State<MyRegister> {
 
       var response = await client.post(url, body: jsonEncode(data));
 
-      if (response.statusCode == 200) {
-        print('Notification sent successfully');
-      } else {
-        print('Failed to send notification: ${response.reasonPhrase}');
-      }
-
       client.close();
     } catch (e) {
-      print('Error sending notification: $e');
+      // Error sending notification
     }
   }
 
@@ -555,7 +546,7 @@ class _MyRegisterState extends State<MyRegister> {
 
       client.close();
     } catch (e) {
-      print('Error sending notification: $e');
+      // Error sending notification
     }
   }
 }

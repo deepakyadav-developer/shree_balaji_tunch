@@ -27,44 +27,38 @@ FlutterTts flutterTts = FlutterTts();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('✓ Firebase initialized successfully');
   } catch (e) {
-    print('✗ Error initializing Firebase: $e');
+    // Silent catch
   }
 
   try {
     // Initialize notifications
     await createNotificationChannel();
-    print('✓ Notification channel created successfully');
   } catch (e) {
-    print('✗ Error creating notification channel: $e');
+    // Silent catch
   }
 
   try {
     await setFirebase();
-    print('✓ Firebase messaging initialized successfully');
   } catch (e) {
-    print('✗ Error setting up Firebase messaging: $e');
+    // Silent catch
   }
 
   try {
     LocalNotificationService.initialize();
-    print('✓ Local notification service initialized successfully');
   } catch (e) {
-    print('✗ Error initializing local notification service: $e');
+    // Silent catch
   }
 
   try {
     // Initialize Firebase messaging service
     await FirebaseMessagingService().initialize();
-    print('✓ Firebase messaging service initialized successfully');
   } catch (e) {
-    print('✗ Error initializing Firebase messaging service: $e');
+    // Silent catch
   }
 
   try {
@@ -73,17 +67,15 @@ void main() async {
       showNotification(message.data);
       LocalNotificationService.createanddisplaynotification(message);
     });
-    print('✓ Message listener set up successfully');
   } catch (e) {
-    print('✗ Error setting up message listener: $e');
+    // Silent catch
   }
 
   try {
     // Initialize language controller
-    Get.put(LanguageController()); 
-    print('✓ Language controller initialized');
+    Get.put(LanguageController());
   } catch (e) {
-    print('✗ Error initializing language controller: $e');
+    // Silent catch
   }
 
   // Ensure language is loaded before app starts
@@ -103,7 +95,6 @@ void main() async {
       initialLocale = Locale('en', 'US');
   }
 
-  print('✓ Starting app with locale: $initialLocale');
   runApp(MyApp(initialLocale: initialLocale));
 }
 
@@ -158,9 +149,8 @@ createNotificationChannel() async {
       importance: NotificationImportance.IMPORTANCE_HIGH,
       name: projectName,
     );
-    print('Notification channel created: $result');
   } catch (e) {
-    print('Error creating notification channel: $e');
+    // Silent catch
   }
 }
 
@@ -187,7 +177,7 @@ Future<void> setFirebase() async {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     if (a.Platform.isIOS) {
       _firebaseMessaging.subscribeToTopic('ios').catchError((e) {
-        print('Failed to subscribe to ios topic: $e');
+        // Silent catch
       });
     } else {
       _firebaseMessaging.subscribeToTopic('android');
@@ -206,12 +196,12 @@ Future<void> setFirebase() async {
     );
 
     _firebaseMessaging.getToken().then((String? token) {
-      print("Push Messaging token: $token");
+      // Token obtained silently
     }).catchError((e) {
-      print("Failed to get token: $e");
+      // Silent catch
     });
   } catch (e) {
-    print('Error initializing Firebase: $e');
+    // Silent catch
   }
 }
 
@@ -222,7 +212,6 @@ Future<void> showNotification(Map<String, dynamic> message) async {
   } else {
     data = message['data'] ?? message;
   }
-  print(data);
   String title = "", body = "", sound = "", language = "", voice = "";
   double volume = 1, pitch = 1, srate = 0.7;
   int msgId = 0;
@@ -285,18 +274,16 @@ Future<void> showNotification(Map<String, dynamic> message) async {
 }
 
 Future onSelect(String? data) async {
-  print("onSelectNotification $data");
+  // Silent notification select
 }
 
 @pragma('vm:entry-point')
 Future<void> myBackgroundMessageHandler(RemoteMessage rMessage) async {
   Map<String, dynamic> message = rMessage.data;
-  print(message);
   var data = message['data'] ?? message;
   String title = "", body = "", sound = "", language = "", voice = "";
   double volume = 1, pitch = 1, srate = 0.7;
   int msgId = 0;
-  print("Background function triggered");
   if (a.Platform.isAndroid) {
     title = data["title"];
     body = data["body"];
