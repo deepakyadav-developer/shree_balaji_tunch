@@ -206,11 +206,6 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                           return FutureBuilder<QuerySnapshot>(
                             future: FirebaseFirestore.instance
                                 .collection("gallery")
-                                .where(Filter.or(
-                                  Filter('category', isEqualTo: id),
-                                  Filter('category', isEqualTo: categoryName),
-                                ))
-                                .limit(1)
                                 .get(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -221,19 +216,42 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                               
                               String fallbackUrl = '';
                               if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-                                var docData = snapshot.data!.docs.first.data() as Map<String, dynamic>?;
-                                if (docData != null) {
-                                  List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'thumbnail'];
-                                  for (String key in possibleKeys) {
-                                    if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
-                                      fallbackUrl = docData[key].toString();
-                                      break;
+                                for (var doc in snapshot.data!.docs) {
+                                  var docData = doc.data() as Map<String, dynamic>?;
+                                  if (docData != null) {
+                                    // Local case-insensitive check
+                                    String cName = (docData['categoryName'] ?? '').toString().toLowerCase();
+                                    String cId = (docData['category'] ?? '').toString().toLowerCase();
+                                    
+                                    if (cId == id.toLowerCase() || 
+                                        cId == categoryName.toLowerCase() || 
+                                        cName == categoryName.toLowerCase() ||
+                                        cName.contains(categoryName.toLowerCase()) ||
+                                        categoryName.toLowerCase().contains(cName)) {
+                                          
+                                      List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'thumbnail'];
+                                      for (String key in possibleKeys) {
+                                        if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                                          fallbackUrl = docData[key].toString();
+                                          break;
+                                        }
+                                      }
+                                      if (fallbackUrl.isNotEmpty) break;
                                     }
                                   }
                                 }
                               }
                               
                               if (fallbackUrl.isNotEmpty) {
+                                return _buildCachedImage(fallbackUrl);
+                              }
+                              
+                              // Absolute fallback
+                              if (categoryName.toLowerCase().contains('gold')) {
+                                fallbackUrl = 'https://cdn-icons-png.flaticon.com/512/2155/2155913.png';
+                                return _buildCachedImage(fallbackUrl);
+                              } else if (categoryName.toLowerCase().contains('silver')) {
+                                fallbackUrl = 'https://cdn-icons-png.flaticon.com/512/3233/3233042.png';
                                 return _buildCachedImage(fallbackUrl);
                               }
                               

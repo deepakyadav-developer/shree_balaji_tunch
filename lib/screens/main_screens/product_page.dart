@@ -38,6 +38,8 @@ class _ProductPageState extends State<ProductPage> {
               .where(Filter.or(
                 Filter('category', isEqualTo: widget.id),
                 Filter('category', isEqualTo: widget.categoryName),
+                Filter('categoryName', isEqualTo: widget.categoryName),
+                Filter('categoryName', isEqualTo: widget.id),
               ))
               .snapshots(),
           builder: (context, snapshot) {
@@ -168,13 +170,14 @@ class _ProductPageState extends State<ProductPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/logo.png",
-                            height: 150,
-                          ),
+                          widget.categoryName.toLowerCase().contains("gold")
+                              ? CachedNetworkImage(imageUrl: 'https://cdn-icons-png.flaticon.com/512/2155/2155913.png', height: 150)
+                              : widget.categoryName.toLowerCase().contains("silver")
+                                  ? CachedNetworkImage(imageUrl: 'https://cdn-icons-png.flaticon.com/512/3233/3233042.png', height: 150)
+                                  : Image.asset("assets/images/logo.png", height: 150),
                           SizedBox(height: 20),
                           Text(
-                            'No Images Available',
+                            'No Custom Images Available',
                             style: TextStyle(
                               fontSize: 20,
                               color: app_info.bgColor,
