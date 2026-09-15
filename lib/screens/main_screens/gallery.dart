@@ -299,7 +299,6 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('videos')
-          .orderBy("updatedTime", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -351,16 +350,53 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
             ),
           );
         }
+        
+        List<DocumentSnapshot> docs = snapshot.data!.docs.toList();
+        docs.sort((a, b) {
+          var aData = a.data() as Map<String, dynamic>?;
+          var bData = b.data() as Map<String, dynamic>?;
+          var aTime = aData != null && aData.containsKey('updatedTime') ? aData['updatedTime'] : null;
+          var bTime = bData != null && bData.containsKey('updatedTime') ? bData['updatedTime'] : null;
+          
+          if (aTime == null && bTime == null) return 0;
+          if (aTime == null) return 1;
+          if (bTime == null) return -1;
+          
+          if (aTime is Timestamp && bTime is Timestamp) {
+            return bTime.compareTo(aTime);
+          }
+          return 0;
+        });
 
         return Padding(
           padding: const EdgeInsets.all(12.0),
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
-            itemCount: snapshot.data!.docs.length,
+            itemCount: docs.length,
             itemBuilder: (BuildContext context, int index) {
-              var docData = snapshot.data!.docs[index].data() as Map<String, dynamic>?;
-              var thumbnail = docData != null && docData.containsKey('thumbnail') ? docData['thumbnail'] ?? '' : '';
-              var videoUrl = docData != null && docData.containsKey('url') ? docData['url'] ?? '' : '';
+              var docData = docs[index].data() as Map<String, dynamic>?;
+              
+              String thumbnail = '';
+              String videoUrl = '';
+              
+              if (docData != null) {
+                List<String> thumbKeys = ['thumbnail', 'thumb', 'image', 'imageUrl', 'image_url', 'pic'];
+                for (String key in thumbKeys) {
+                  if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                    thumbnail = docData[key].toString();
+                    break;
+                  }
+                }
+                
+                List<String> videoKeys = ['url', 'video', 'videoUrl', 'video_url', 'link', 'file'];
+                for (String key in videoKeys) {
+                  if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                    videoUrl = docData[key].toString();
+                    break;
+                  }
+                }
+              }
+              
               list.add(videoUrl);
 
               return Container(
