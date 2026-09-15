@@ -63,10 +63,6 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }
 
   void _onItemTapped(int index) {
-    if (isGuest && (index == 1 || index == 4)) {
-      _checkGuestAndPrompt(context);
-      return;
-    }
     setState(() {
       _selectedIndex = index;
     });
@@ -115,7 +111,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
     print('ID -------$id');
   }
 
-  late String? id;
+  String? id;
   bool isGuest = false;
   final PageController _pageController = PageController();
   String mobile = "";
@@ -477,11 +473,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                     iconGradient: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                     onTap: () {
                       Navigator.pop(context);
-                      if (isGuest) {
-                        _checkGuestAndPrompt(context);
-                      } else {
-                        Get.to(() => ShopNow());
-                      }
+                      Get.to(() => ShopNow());
                     },
                   ),
                   SizedBox(height: 10),

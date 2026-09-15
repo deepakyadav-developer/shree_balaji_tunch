@@ -486,11 +486,12 @@ class SplashScreenState extends State<SplashScreen>
 
   _getData() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    if (sp.getString("mobile") == null && sp.getBool("isGuest") != true) {
-      Get.offAll(() => MyRegister());
-    } else {
-      Get.offAll(() => MyBottomBar());
+    if (sp.getString("mobile") == null) {
+      // Set to guest by default to allow users to browse without registration
+      // This complies with Apple App Store Guideline 5.1.1(v)
+      sp.setBool("isGuest", true);
     }
+    Get.offAll(() => MyBottomBar());
   }
 }
 

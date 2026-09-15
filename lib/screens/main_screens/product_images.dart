@@ -39,8 +39,19 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
     });
 
     try {
-      var response = await http
-          .get(Uri.parse(widget.urls[int.parse(_currentPage) - 1].get('url')));
+      var docData = widget.urls[int.parse(_currentPage) - 1].data() as Map<String, dynamic>?;
+      String targetUrl = '';
+      if (docData != null) {
+        List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'categorypic', 'categoryPic', 'thumbnail'];
+        for (String key in possibleKeys) {
+          if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+            targetUrl = docData[key].toString();
+            break;
+          }
+        }
+      }
+
+      var response = await http.get(Uri.parse(targetUrl));
 
       final directory = await getApplicationDocumentsDirectory();
       final imagePath = await File('${directory.path}/image.png').create();
@@ -150,7 +161,18 @@ class _BannerImagePreviewState extends State<ProductImagePreview> {
                   builder: (context, i) {
                     return PhotoViewGalleryPageOptions(
                       imageProvider: CachedNetworkImageProvider(
-                        widget.urls[i].get('url'),
+                        (() {
+                          var docData = widget.urls[i].data() as Map<String, dynamic>?;
+                          if (docData != null) {
+                            List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'categorypic', 'categoryPic', 'thumbnail'];
+                            for (String key in possibleKeys) {
+                              if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                                return docData[key].toString();
+                              }
+                            }
+                          }
+                          return '';
+                        })(),
                       ),
                       minScale: PhotoViewComputedScale.contained,
                       maxScale: PhotoViewComputedScale.covered * 2,

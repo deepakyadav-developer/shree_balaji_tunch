@@ -137,10 +137,22 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
               ),
               itemBuilder: (context, index) {
                 var docData = snapshot.data!.docs[index].data() as Map<String, dynamic>?;
+                
+                String imageUrl = '';
+                if (docData != null) {
+                  List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'categorypic', 'categoryPic', 'thumbnail'];
+                  for (String key in possibleKeys) {
+                    if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                      imageUrl = docData[key].toString();
+                      break;
+                    }
+                  }
+                }
+
                 return _buildCategoryCard(
                   snapshot.data!.docs[index].id,
                   docData != null && docData.containsKey('categoryName') ? docData['categoryName'] ?? 'Unnamed' : 'Unnamed',
-                  docData != null && docData.containsKey('url') ? docData['url'] ?? '' : '',
+                  imageUrl,
                 );
               },
             ),
@@ -185,31 +197,55 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
                       decoration: BoxDecoration(
                         color: app_info.bgColor.withValues(alpha: 0.1),
                       ),
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) {
-                          return Container(
-                            color: app_info.bgColor.withValues(alpha: 0.1),
-                            child: Center(
-                              child: Image.asset(
-                                "assets/images/logo.png",
-                                height: 60,
-                              ),
-                            ),
+                      child: Builder(
+                        builder: (context) {
+                          if (imageUrl.isNotEmpty) {
+                            return _buildCachedImage(imageUrl);
+                          }
+                          // Fallback: Query the first image from this category in the gallery collection
+                          return FutureBuilder<QuerySnapshot>(
+                            future: FirebaseFirestore.instance
+                                .collection("gallery")
+                                .where(Filter.or(
+                                  Filter('category', isEqualTo: id),
+                                  Filter('category', isEqualTo: categoryName),
+                                ))
+                                .limit(1)
+                                .get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Center(
+                                  child: Image.asset("assets/images/logo.png", height: 60),
+                                );
+                              }
+                              
+                              String fallbackUrl = '';
+                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                                var docData = snapshot.data!.docs.first.data() as Map<String, dynamic>?;
+                                if (docData != null) {
+                                  List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'thumbnail'];
+                                  for (String key in possibleKeys) {
+                                    if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                                      fallbackUrl = docData[key].toString();
+                                      break;
+                                    }
+                                  }
+                                }
+                              }
+                              
+                              if (fallbackUrl.isNotEmpty) {
+                                return _buildCachedImage(fallbackUrl);
+                              }
+                              
+                              return Container(
+                                color: app_info.bgColor.withValues(alpha: 0.05),
+                                child: Center(
+                                  child: Image.asset("assets/images/logo.png", height: 60),
+                                ),
+                              );
+                            },
                           );
-                        },
-                        errorWidget: (context, url, error) {
-                          return Container(
-                            color: app_info.bgColor.withValues(alpha: 0.05),
-                            child: Center(
-                              child: Image.asset(
-                                "assets/images/logo.png",
-                                height: 60,
-                              ),
-                            ),
-                          );
-                        },
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
+                        }
                       ),
                     ),
                   ),
@@ -431,6 +467,35 @@ class _GalleryState extends State<Gallery> with AutomaticKeepAliveClientMixin {
         categorypic: categorypic,
       ),
       transition: Transition.fadeIn,
+    );
+  }
+
+  Widget _buildCachedImage(String url) {
+    return CachedNetworkImage(
+      placeholder: (context, url) {
+        return Container(
+          color: app_info.bgColor.withValues(alpha: 0.1),
+          child: Center(
+            child: Image.asset(
+              "assets/images/logo.png",
+              height: 60,
+            ),
+          ),
+        );
+      },
+      errorWidget: (context, url, error) {
+        return Container(
+          color: app_info.bgColor.withValues(alpha: 0.05),
+          child: Center(
+            child: Image.asset(
+              "assets/images/logo.png",
+              height: 60,
+            ),
+          ),
+        );
+      },
+      imageUrl: url,
+      fit: BoxFit.cover,
     );
   }
 

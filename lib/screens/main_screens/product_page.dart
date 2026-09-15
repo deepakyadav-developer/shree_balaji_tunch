@@ -35,7 +35,10 @@ class _ProductPageState extends State<ProductPage> {
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection("gallery")
-              .where('category', isEqualTo: widget.categoryName)
+              .where(Filter.or(
+                Filter('category', isEqualTo: widget.id),
+                Filter('category', isEqualTo: widget.categoryName),
+              ))
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -195,7 +198,17 @@ class _ProductPageState extends State<ProductPage> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           var docData = snapshot.data!.docs[index].data() as Map<String, dynamic>?;
-                          var imageUrl = docData != null && docData.containsKey('url') ? docData['url'] ?? '' : '';
+                          
+                          String imageUrl = '';
+                          if (docData != null) {
+                            List<String> possibleKeys = ['url', 'image', 'imageUrl', 'imageURL', 'image_url', 'img', 'pic', 'photo', 'categorypic', 'categoryPic', 'thumbnail'];
+                            for (String key in possibleKeys) {
+                              if (docData.containsKey(key) && docData[key] != null && docData[key].toString().isNotEmpty) {
+                                imageUrl = docData[key].toString();
+                                break;
+                              }
+                            }
+                          }
                           
                           return GestureDetector(
                             onTap: () {
