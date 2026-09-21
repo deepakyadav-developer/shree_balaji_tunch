@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:shreebalaji_tounch/controllers/language_controller.dart';
 import 'package:shreebalaji_tounch/screens/main_screens/contact_us.dart';
-import 'package:shreebalaji_tounch/screens/main_screens/livemcx.dart';
+
 import 'package:shreebalaji_tounch/screens/register.dart';
 import 'package:marquee/marquee.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/app_info.dart' as app_info;
 import '../main_screens/Mcx.dart';
-import '../main_screens/bank_page.dart';
+
 import '../main_screens/gallery.dart';
 import '../main_screens/rate_page.dart';
 
@@ -30,7 +30,7 @@ class MyBottomBar extends StatefulWidget {
 }
 
 class _MyBottomBarState extends State<MyBottomBar> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
   String message1 = "";
   var data;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -69,36 +69,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }
 
   bool _checkGuestAndPrompt(BuildContext context) {
-    if (isGuest) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Text("Guest Mode", style: TextStyle(fontWeight: FontWeight.bold, color: app_info.bgColor)),
-          content: Text("Please Login or Register to access account-based features.", style: TextStyle(fontSize: 16)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Cancel", style: TextStyle(color: Colors.grey[700])),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                SharedPreferences sp = await SharedPreferences.getInstance();
-                await sp.clear();
-                Get.offAll(() => MyRegister());
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: app_info.bgColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
-              ),
-              child: Text("Login / Register", style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
-      );
-      return true;
-    }
-    return false;
+    return false; // Disabled login requirement for Apple compliance
   }
 
   getUserId() async {
@@ -115,13 +86,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   bool isGuest = false;
   final PageController _pageController = PageController();
   String mobile = "";
-  final List<Widget> _pages = [
-    // RatePage(),
-    // Gallery(),
-    // Contact(),
-    // Bank(),
-    // LiveMcx()
-  ];
+  final List<Widget> _pages = [];
 
   getData() async {
     try {
@@ -466,17 +431,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  _buildPremiumMenuItem(
-                    icon: Icons.shopping_bag_rounded,
-                    title: 'shop_now'.tr,
-                    subtitle: 'Browse our collection',
-                    iconGradient: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                    onTap: () {
-                      Navigator.pop(context);
-                      Get.to(() => ShopNow());
-                    },
-                  ),
-                  SizedBox(height: 10),
+
                   _buildPremiumMenuItem(
                     icon: Icons.star_rounded,
                     title: 'leave_review'.tr,
@@ -624,90 +579,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
                         ),
                       ),
 
-                      // Account Management Options
-                      id == null || id == ''
-                          ? _buildDarkDrawerItem(
-                              icon: Icons.login_rounded,
-                              title: 'login_register'.tr,
-                              iconColor: Colors.green,
-                              onTap: () {
-                                Navigator.pop(context);
-                                Get.to(() => MyRegister());
-                              },
-                            )
-                          : _buildDarkDrawerItem(
-                              icon: Icons.delete_outline_rounded,
-                              title: 'deactivate_account'.tr,
-                              iconColor: Color(0xFFEF4444),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                SharedPreferences pref =
-                                    await SharedPreferences.getInstance();
-                                String? id = pref.getString('mobile');
-                                print('Drawer Id -------${id}');
 
-                                showDialog<void>(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('delete_account'.tr),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text('delete_confirmation'.tr),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text('yes'.tr),
-                                          onPressed: () async {
-                                            if (id != null) {
-                                              final querySnapshot = await FirebaseFirestore.instance
-                                                  .collection('register')
-                                                  .where('mobile', isEqualTo: id)
-                                                  .get();
-                                              for (var doc in querySnapshot.docs) {
-                                                await doc.reference.delete();
-                                              }
-                                            }
-                                            await pref.clear();
-                                            Navigator.of(context).pop();
-                                            Get.offAll(() => MyRegister());
-                                            Fluttertoast.showToast(
-                                                msg: "Your account is deleted");
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('no'.tr),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                      id == null || id == ''
-                          ? SizedBox()
-                          : _buildDarkDrawerItem(
-                              icon: Icons.logout_rounded,
-                              title: 'logout'.tr,
-                              iconColor: Color(0xFFF97316),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                SharedPreferences sp =
-                                    await SharedPreferences.getInstance();
-                                sp.setString('mobile', '');
-                                sp.setString('useId', '');
-                                sp.setBool('isGuest', false);
-                                Get.offAll(() => MyRegister());
-                              },
-                            ),
-                      SizedBox(height: 8),
                     ],
                   ),
                 ),
@@ -1351,13 +1223,9 @@ class _MyBottomBarState extends State<MyBottomBar> {
     if (_selectedIndex == 0) {
       return Center(child: ContactUs_Screen());
     } else if (_selectedIndex == 1) {
-      return Center(child: Bank());
-    } else if (_selectedIndex == 2) {
       return Center(child: RatePage());
-    } else if (_selectedIndex == 3) {
+    } else if (_selectedIndex == 2) {
       return Center(child: Gallery());
-    } else if (_selectedIndex == 4) {
-      return Center(child: LiveMcx());
     } else {
       return Container();
     }
@@ -1407,22 +1275,12 @@ class _MyBottomBarState extends State<MyBottomBar> {
                     label: 'contact_us'.tr,
                     index: 0,
                   ),
-                  _buildNavItem(
-                    icon: Icons.account_balance_rounded,
-                    label: 'bank'.tr,
-                    index: 1,
-                  ),
                   // Center Floating Button
                   _buildCenterButton(),
                   _buildNavItem(
-                    icon: Icons.shopping_bag_rounded,
-                    label: 'products'.tr,
-                    index: 3,
-                  ),
-                  _buildNavItem(
-                    icon: Icons.show_chart_rounded,
-                    label: 'mcx'.tr,
-                    index: 4,
+                    icon: Icons.photo_library_rounded,
+                    label: 'gallery'.tr,
+                    index: 2,
                   ),
                 ],
               ),
@@ -1586,10 +1444,10 @@ class _MyBottomBarState extends State<MyBottomBar> {
   }
 
   Widget _buildCenterButton() {
-    final isSelected = _selectedIndex == 2;
+    final isSelected = _selectedIndex == 1;
 
     return GestureDetector(
-      onTap: () => _onItemTapped(2),
+      onTap: () => _onItemTapped(1),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
