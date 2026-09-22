@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - shreebalaji
-  workflow_dispatch: # Allows you to run it manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  build_and_deploy_ios:
+  build_ios:
     runs-on: macos-latest
 
     steps:
@@ -34,7 +34,7 @@ jobs:
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
-          # Import certificate and provisioning profile from secrets
+          # Import certificate and provisioning profile from secrets (with Windows newlines fix)
           echo -n "$BUILD_CERTIFICATE_BASE64" | tr -d '\r\n ' | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | tr -d '\r\n ' | base64 --decode -o $PP_PATH
 
@@ -45,12 +45,19 @@ jobs:
 
           # Import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
+      - name: 🔧 Force Manual Signing in Xcode
+        run: |
+          PBXPROJ="ios/Runner.xcodeproj/project.pbxproj"
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' "$PBXPROJ"
+          sed -i '' 's/DEVELOPMENT_TEAM = "";/DEVELOPMENT_TEAM = 96TL3JLA2M;/g' "$PBXPROJ"
+          
       - name: 🔨 Build iOS App (IPA)
         run: flutter build ipa --release --export-method app-store
 
