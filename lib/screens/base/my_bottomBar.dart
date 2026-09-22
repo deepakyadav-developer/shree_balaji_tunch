@@ -21,6 +21,7 @@ import '../main_screens/Mcx.dart';
 
 import '../main_screens/gallery.dart';
 import '../main_screens/rate_page.dart';
+import '../main_screens/calculator_page.dart';
 
 class MyBottomBar extends StatefulWidget {
   const MyBottomBar({super.key});
@@ -1226,6 +1227,8 @@ class _MyBottomBarState extends State<MyBottomBar> {
       return Center(child: RatePage());
     } else if (_selectedIndex == 2) {
       return Center(child: Gallery());
+    } else if (_selectedIndex == 3) {
+      return Center(child: CalculatorPage());
     } else {
       return Container();
     }
@@ -1275,8 +1278,16 @@ class _MyBottomBarState extends State<MyBottomBar> {
                     label: 'contact_us'.tr,
                     index: 0,
                   ),
-                  // Center Floating Button
-                  _buildCenterButton(),
+                  _buildNavItem(
+                    icon: Icons.calculate_rounded,
+                    label: 'Calculator',
+                    index: 3,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.bar_chart_rounded,
+                    label: 'live_bhaw'.tr,
+                    index: 1,
+                  ),
                   _buildNavItem(
                     icon: Icons.photo_library_rounded,
                     label: 'gallery'.tr,
@@ -1493,7 +1504,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.bar_chart_rounded,
+                Icons.trending_up_rounded,
                 color: isSelected ? app_info.whiteColor : app_info.primaryColor,
                 size: 32,
               ),

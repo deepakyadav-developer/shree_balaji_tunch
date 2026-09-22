@@ -1,0 +1,46 @@
+name: Setup iOS Environment
+description: Configures CocoaPods cache, Xcode, and iOS code signing for CI builds.
+
+inputs:
+  certificate:
+    description: Base64 encoded Apple certificate (.p12)
+    required: true
+  certificate-password:
+    description: Certificate password
+    required: true
+  provisioning-profile:
+    description: Base64 encoded main provisioning profile
+    required: true
+  provisioning-profile-ext:
+    description: Base64 encoded extension provisioning profile
+    required: false
+  keychain-password:
+    description: Keychain password
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: 📦 Cache CocoaPods
+      uses: actions/cache@v4
+      with:
+        path: |
+          ios/Pods
+          ~/Library/Caches/CocoaPods
+          ~/.cocoapods/repos
+        key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock', 'pubspec.lock') }}
+        restore-keys: ${{ runner.os }}-pods-
+
+    - name: 🛠️ Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+
+    - name: ✍️ Setup iOS Signing
+      uses: ./.github/actions/setup-ios-signing
+      with:
+        certificate: ${{ inputs.certificate }}
+        certificate-password: ${{ inputs.certificate-password }}
+        provisioning-profile: ${{ inputs.provisioning-profile }}
+        provisioning-profile-ext: ${{ inputs.provisioning-profile-ext }}
+        keychain-password: ${{ inputs.keychain-password }}

@@ -1,0 +1,61 @@
+name: iOS Production Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy to App Store
+    runs-on: macos-latest
+    environment: production
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: 🍏 Setup iOS Environment
+        uses: ./.github/actions/setup-ios-environment
+        with:
+          certificate: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          provisioning-profile: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: 🏷️ Determine Version Name & Code
+        id: version
+        run: |
+          VERSION_NAME=$(grep '^version: ' pubspec.yaml | awk '{print $2}' | cut -d '+' -f 1)
+          OFFSET=${{ vars.VERSION_CODE_OFFSET || '0' }}
+          VERSION_CODE=$((${{ github.run_number }} + $OFFSET))
+          
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+
+      - name: 🔨 Build iOS IPA
+        run: flutter build ipa --release --build-name=$VERSION_NAME --build-number=$VERSION_CODE
+
+      - name: 💾 Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-ipa
+          path: build/ios/ipa/*.ipa
+          retention-days: 7
+
+      - name: 🚀 Upload to TestFlight / App Store Connect
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }} # This should be an app-specific password
+        run: |
+          xcrun altool --upload-app -f build/ios/ipa/*.ipa -t ios -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
