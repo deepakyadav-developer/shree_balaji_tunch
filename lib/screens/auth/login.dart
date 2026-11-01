@@ -202,11 +202,17 @@ class _MyLoginState extends State<MyLogin> {
     } catch (e) {
       if (Get.isDialogOpen ?? false) Get.back();
       setState(() => _isLoading = false);
+      String err = e.toString();
+      if (err.contains('channel-error') || err.contains('FirebaseAuthHostApi')) {
+        err =
+            'Firebase Auth native plugin linked. Please completely STOP the running app and RE-RUN it (press Stop in VS Code, then Run).';
+      }
       Get.snackbar(
         'Error',
-        'Failed to connect to Firebase: ${e.toString()}',
+        err,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
+        duration: const Duration(seconds: 8),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -424,7 +430,7 @@ class _MyLoginState extends State<MyLogin> {
                             const SizedBox(width: 12),
                             Flexible(
                               child: Text(
-                                _step == 0 ? 'Sign In' : 'Verify SMS OTP',
+                                _step == 0 ? 'Sign In' : 'Verify OTP',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: isSmallScreen ? 28 : 34,
@@ -459,7 +465,7 @@ class _MyLoginState extends State<MyLogin> {
                           _buildMobileField(isSmallScreen),
                           SizedBox(height: isSmallScreen ? 25 : 35),
                           _buildActionButton(
-                            label: 'SEND FIREBASE OTP',
+                            label: 'SEND OTP',
                             onTap: _sendFirebaseOtp,
                             isSmallScreen: isSmallScreen,
                           ),
