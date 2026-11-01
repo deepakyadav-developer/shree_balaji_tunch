@@ -43,6 +43,7 @@ dependencies:
   upgrader: ^11.3.0
   animate_do: ^3.3.4
   device_info_plus: ^11.2.0
+  firebase_auth: ^5.7.0
 
 dev_dependencies:
   flutter_test:

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../../constant/app_info.dart' as app_info;
+import '../auth/login.dart';
 import '../register.dart';
 import 'my_bottomBar.dart';
 
@@ -486,12 +487,11 @@ class SplashScreenState extends State<SplashScreen>
 
   _getData() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    if (sp.getString("mobile") == null) {
-      // Set to guest by default to allow users to browse without registration
-      // This complies with Apple App Store Guideline 5.1.1(v)
-      sp.setBool("isGuest", true);
+    if (sp.getString("mobile") == null && sp.getBool("isGuest") != true) {
+      Get.offAll(() => const MyLogin());
+    } else {
+      Get.offAll(() => const MyBottomBar());
     }
-    Get.offAll(() => MyBottomBar());
   }
 }
 

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:shreebalaji_tounch/controllers/language_controller.dart';
 import 'package:shreebalaji_tounch/screens/main_screens/contact_us.dart';
 
+import 'package:shreebalaji_tounch/screens/auth/login.dart';
 import 'package:shreebalaji_tounch/screens/register.dart';
 import 'package:marquee/marquee.dart';
 import 'package:share_plus/share_plus.dart';
@@ -22,6 +23,7 @@ import '../main_screens/Mcx.dart';
 import '../main_screens/gallery.dart';
 import '../main_screens/rate_page.dart';
 import '../main_screens/calculator_page.dart';
+import '../main_screens/portfolio_page.dart';
 
 class MyBottomBar extends StatefulWidget {
   const MyBottomBar({super.key});
@@ -114,6 +116,49 @@ class _MyBottomBarState extends State<MyBottomBar> {
         key: scaffoldKey,
         drawer: _buildDrawer(),
         appBar: _buildAppBar(),
+        floatingActionButton: Container(
+          height: 65,
+          width: 65,
+          margin: EdgeInsets.only(top: 30),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              colors: _selectedIndex == 4 
+                  ? [app_info.amberColor, app_info.orangeColor]
+                  : [app_info.primaryColor, app_info.primaryLightColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: (_selectedIndex == 4 ? app_info.amberColor : app_info.primaryColor).withOpacity(0.4),
+                blurRadius: 15,
+                spreadRadius: 2,
+                offset: Offset(0, 5),
+              ),
+            ],
+            border: Border.all(color: Colors.white, width: 2),
+          ),
+          child: FloatingActionButton(
+            onPressed: () => _onItemTapped(4),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            highlightElevation: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.account_balance_wallet_rounded, 
+                  color: Colors.white,
+                  size: 26,
+                ),
+                SizedBox(height: 2),
+                Text('Portfolio', style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: _buildBottomNavigationBar(),
         body: _getBodyWidget(),
       ),
@@ -433,6 +478,20 @@ class _MyBottomBarState extends State<MyBottomBar> {
               child: Column(
                 children: [
 
+                  if (isGuest)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _buildPremiumMenuItem(
+                        icon: Icons.login_rounded,
+                        title: 'login_register'.tr,
+                        subtitle: 'Sign in or create account',
+                        iconGradient: [app_info.amberColor, app_info.orangeColor],
+                        onTap: () {
+                          Navigator.pop(context);
+                          Get.to(() => const MyLogin());
+                        },
+                      ),
+                    ),
                   _buildPremiumMenuItem(
                     icon: Icons.star_rounded,
                     title: 'leave_review'.tr,
@@ -580,7 +639,83 @@ class _MyBottomBarState extends State<MyBottomBar> {
                         ),
                       ),
 
+                      // Privacy Policy Link
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          leading: const Icon(Icons.privacy_tip_outlined, color: Color(0xFF64B5F6), size: 20),
+                          title: Text(
+                            'privacy_policy'.tr,
+                            style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white38, size: 14),
+                          onTap: () {
+                            _launchUrl("https://visiondgtech.com/privacy-policy");
+                          },
+                        ),
+                      ),
 
+                      // About & Disclaimer Link
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          leading: Icon(Icons.info_outline_rounded, color: app_info.goldColor, size: 20),
+                          title: Text(
+                            'about_us'.tr,
+                            style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white38, size: 14),
+                          onTap: () {
+                            _showAboutDisclaimer(context);
+                          },
+                        ),
+                      ),
+
+                      // Logout Option
+                      if (!isGuest && id != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            leading: const Icon(Icons.logout_rounded, color: Colors.orangeAccent, size: 20),
+                            title: Text(
+                              'logout'.tr,
+                              style: const TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white38, size: 14),
+                            onTap: () async {
+                              Navigator.pop(context);
+                              SharedPreferences sp = await SharedPreferences.getInstance();
+                              await sp.clear();
+                              Get.offAll(() => const MyLogin());
+                            },
+                          ),
+                        ),
+
+                      // Delete Account Button (Required for Apple Compliance)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          tileColor: Colors.red.withOpacity(0.12),
+                          leading: const Icon(Icons.delete_forever_rounded, color: Colors.redAccent, size: 22),
+                          title: Text(
+                            'delete_account'.tr,
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.redAccent, size: 14),
+                          onTap: () {
+                            _showDeleteAccountDialog(context);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                     ],
                   ),
                 ),
@@ -1229,6 +1364,8 @@ class _MyBottomBarState extends State<MyBottomBar> {
       return Center(child: Gallery());
     } else if (_selectedIndex == 3) {
       return Center(child: CalculatorPage());
+    } else if (_selectedIndex == 4) {
+      return Center(child: PortfolioPage());
     } else {
       return Container();
     }
@@ -1279,19 +1416,20 @@ class _MyBottomBarState extends State<MyBottomBar> {
                     index: 0,
                   ),
                   _buildNavItem(
-                    icon: Icons.calculate_rounded,
-                    label: 'Calculator',
-                    index: 3,
-                  ),
-                  _buildNavItem(
                     icon: Icons.bar_chart_rounded,
                     label: 'live_bhaw'.tr,
                     index: 1,
                   ),
+                  SizedBox(width: 45), // Space for centered FAB
                   _buildNavItem(
                     icon: Icons.photo_library_rounded,
                     label: 'gallery'.tr,
                     index: 2,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.calculate_rounded,
+                    label: 'Calculator',
+                    index: 3,
                   ),
                 ],
               ),
@@ -1606,4 +1744,99 @@ class _MyBottomBarState extends State<MyBottomBar> {
       print("error");
     }
   }
+
+  void _showDeleteAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0D1442),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 28),
+            const SizedBox(width: 8),
+            Text(
+              'delete_account'.tr,
+              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Text(
+          'delete_confirmation'.tr,
+          style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('no'.tr, style: const TextStyle(color: Colors.white70)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () async {
+              Navigator.pop(ctx);
+              Navigator.pop(context);
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              await sp.clear();
+              Get.snackbar(
+                'Account Deleted',
+                'account_deleted'.tr,
+                backgroundColor: Colors.redAccent,
+                colorText: Colors.white,
+                snackPosition: SnackPosition.BOTTOM,
+              );
+              Get.offAll(() => const MyLogin());
+            },
+            child: Text('yes'.tr, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAboutDisclaimer(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0D1442),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.info_outline_rounded, color: app_info.goldColor, size: 26),
+            const SizedBox(width: 8),
+            const Text(
+              'About & Disclaimer',
+              style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Shree Balaji Tunch is an independent precious metals utility suite and market rates tracker. It provides real-time indicative bullion rates, gold testing (Tunch) calculators, melting loss calculations, and personal portfolio tracking.',
+                style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 13, height: 1.4),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Disclaimer: Rates shown are indicative market reference rates. Purity estimates are mathematical representations based on user inputs. Always verify with official assayers.',
+                style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 12, fontStyle: FontStyle.italic, height: 1.3),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Close', style: TextStyle(color: app_info.goldColor)),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

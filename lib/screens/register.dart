@@ -8,6 +8,7 @@ import 'package:shreebalaji_tounch/constant/app_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import 'auth/login.dart';
 import 'base/my_bottomBar.dart';
 
 class MyRegister extends StatefulWidget {
@@ -64,22 +65,59 @@ class _MyRegisterState extends State<MyRegister> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: isSmallScreen ? 20 : 30),
-                        // Back button
-                        Container(
-                          decoration: BoxDecoration(
-                            color: cardColor.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_ios_new,
-                              color: accentColor,
-                              size: 20,
+                        // Back button & Brand Logo Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: cardColor.withValues(alpha: 0.3),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: accentColor,
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  if (Navigator.canPop(context)) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    Get.off(() => const MyLogin());
+                                  }
+                                },
+                              ),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
+                            Container(
+                              width: isSmallScreen ? 60 : 70,
+                              height: isSmallScreen ? 60 : 70,
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: cardColor.withOpacity(0.6),
+                                border: Border.all(color: accentColor, width: 2),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: accentColor.withOpacity(0.2),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset('assets/playstore-icon.png', fit: BoxFit.contain),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 48), // Balancing width
+                          ],
                         ),
-                        SizedBox(height: isSmallScreen ? 25 : 35),
+                        SizedBox(height: isSmallScreen ? 20 : 25),
                         // Header with gold accent bar
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,7 +221,11 @@ class _MyRegisterState extends State<MyRegister> {
                         Center(
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, 'login');
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              } else {
+                                Get.off(() => const MyLogin());
+                              }
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(
